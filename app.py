@@ -1,24 +1,17 @@
 import streamlit as st
 import requests
 st.title('Visualization of information - Final Project')
-# Fetch the code from your GitHub repository
-response = requests.get('VisualizationProject.ipynb')
-code = response.text
-
-# Execute the code
-exec(code)
 
 
-# import streamlit as st
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import numpy as np
-# from sklearn.preprocessing import MinMaxScaler
+# # import streamlit as st
+# # import pandas as pd
+# # import matplotlib.pyplot as plt
+# # import numpy as np
+# # from sklearn.preprocessing import MinMaxScaler
 
 
-
-# def build_st_query_for_bar_charts(df: pd.DataFrame, header_title: str, fake_value: str):
-#     st.subheader('Compare most popular names by year')
+# def first_vis(df: pd.DataFrame, header_title: str, fake_value: str):
+#     st.subheader('Comparison of Jewish & Muslim (boys and girls) names over the years'))
 #     years_list = df.columns.unique().tolist()[1:]
 #     selected_years = st.selectbox(f"Select {header_title}", [fake_value] + years_list)
 
