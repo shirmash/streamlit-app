@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-
+st.title('Visualization of information - Final Project')
 # Fetch the code from your GitHub repository
 response = requests.get('VisualizationProject.ipynb')
 code = response.text
