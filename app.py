@@ -84,7 +84,7 @@ data = pd.read_csv('songs_normalize.csv')
 
 
 def first_vis(data):
-songs_normalize = data.copy()
+    songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
 
     scaler = MinMaxScaler()
