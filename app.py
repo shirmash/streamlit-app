@@ -1,23 +1,13 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-import ipywidgets as widgets
-from IPython.display import display
 import shap
-from IPython.display import clear_output
-import warnings
-import matplotlib
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.io as pio
-import plotly.subplots as sp
 np.bool = np.bool_
 
 
@@ -216,7 +206,7 @@ def second_vis(data, key_suffix=""):
     ax.set_ylabel("Feature", fontsize=85)
     ax.set_title(f"SHAP Values for Popularity {popularity_dropdown}", fontsize=90)
     ax.tick_params(axis='both', which='major', labelsize=80)
-    plt.tight_layout()
+    st.pyplot(plt.gcf())
 
     return fig
 
@@ -238,13 +228,7 @@ def display_side_by_side(data):
 
 # Set the default Plotly renderer to be 'iframe' for better rendering in Streamlit
 pio.renderers.default = 'iframe'
-# def display_side_by_side(data):
-#     col1, col2 = st.columns(2)
-#     with col1:
-#         second_vis(data, key_suffix="_1")
-#
-#     with col2:
-#         second_vis(data, key_suffix="_2")
+
 
 # Call the function to run the Streamlit app
 first_vis(data)
