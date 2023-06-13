@@ -91,7 +91,7 @@ def first_vis(data):
     numeric_columns = songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])
     songs_normalize[numeric_columns] = scaler.fit_transform(songs_normalize[numeric_columns])
 
-    # Get the columns names and save only the relevant ones
+    # Get the column names and save only the relevant ones
     column_names = list(songs_normalize.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
@@ -99,7 +99,7 @@ def first_vis(data):
     # Convert columns to numeric
     songs_normalize[features_names] = songs_normalize[features_names].apply(pd.to_numeric, errors='coerce')
 
-    avg_popularity = songs_normalize.groupby(['year']).mean().reset_index()
+    avg_popularity = songs_normalize.groupby(['year']).mean(numeric_only=True).reset_index()
 
 
     # Create the lines for the plot
