@@ -219,12 +219,12 @@ def display_side_by_side(data):
 
     # Display the first graph in the first column
     with col1:
-        fig1 = second_vis(data)
+        fig1 = second_vis(data, key_suffix="_1")
         st.pyplot(fig1)
 
     # Display the second graph in the second column
     with col2:
-        fig2 = second_vis(data)
+        fig2 = second_vis(data, key_suffix="_2")
         st.pyplot(fig2)
 
 
