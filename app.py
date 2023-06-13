@@ -82,24 +82,19 @@ data = pd.read_csv('songs_normalize.csv')
 #         # Display the popularity dropdown
 #         popularity_dropdown
 
+
 def first_vis(data):
     songs_normalize = data.copy()
-    songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
+    songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
 
     scaler = MinMaxScaler()
-    songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
-        songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
+    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','explicit'])])
 
     # Get the columns names and save only the relevant ones
     column_names = list(songs_normalize.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_to_remove = ['song', 'explicit', 'artist', 'year','popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
-
-    # Convert non-numeric columns to numeric
-    non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
-    songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-
-    avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
+    avg_popularity = songs_normalize.groupby(['year']).mean().reset_index()
 
     # Create the lines for the plot
     lines = []
@@ -139,7 +134,7 @@ def first_vis(data):
                         args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
                     )
                 ]),
-                direction='down',  # the position of the dropdown
+                direction='down', # the position of the dropdown
                 showactive=True,
                 x=1.1,
                 xanchor='right',
@@ -211,7 +206,6 @@ def second_vis(data, key_suffix=""):
     ax.set_ylabel("Feature", fontsize=85)
     ax.set_title(f"SHAP Values for Popularity {popularity_dropdown}", fontsize=90)
     ax.tick_params(axis='both', which='major', labelsize=80)
-    st.pyplot(plt.gcf())
 
     return fig
 
