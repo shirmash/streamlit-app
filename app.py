@@ -88,7 +88,7 @@ def first_vis(data):
         height=600,  # Set the height of the chart
     )
     # Display the figure
-    col1, col2 = st.columns([1, 15])
+    col1, col2 = st.columns([1, 17])
     with col1:
         st.write("")
     with col2:
@@ -163,7 +163,7 @@ def second_vis(data):
         height=700,
     )
     # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 6])
+    col1, col2 = st.columns([1, 17])
     with col1:
         st.write("")
     with col2:
@@ -245,7 +245,7 @@ def second_vis_alt(data):
     )
 
     # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 7])
+    col1, col2 = st.columns([1, 17])
     with col1:
         st.write("")
     with col2:
@@ -323,7 +323,7 @@ def third_vis(data):
     )
 
     # Display the figure in Streamlit
-    col1, col2 = st.columns([1,7])
+    col1, col2 = st.columns([1,17])
     with col1:
         st.write("")
     with col2:
