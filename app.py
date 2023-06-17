@@ -41,7 +41,7 @@ def first_vis(data):
             lines.append(line)
 
     # Create the layout with checklist dropdown
-    layout = go.Layout(
+   layout = go.Layout(
     title='Average Feature Value per Year',
     title_x=0.3,
     title_y=0.9,
@@ -49,8 +49,8 @@ def first_vis(data):
     yaxis_title='Average Normalized Value',
     legend=dict(
         title='Choose Features',
-        title_font=dict(size=18),
-        font=dict(color='black')  # Set legend text color to black
+        title_font=dict(size=18, color='#333333'),  # Dark black legend title
+        font=dict(color='#333333')  # Dark black legend text
     ),
     annotations=[
         dict(
@@ -60,7 +60,7 @@ def first_vis(data):
             yref='paper',
             text='One click to remove the feature',
             showarrow=False,
-            font=dict(size=10, color='black')  # Set annotation text color to black
+            font=dict(size=10, color='#333333')  # Dark black annotation text
         )
     ],
     updatemenus=[
@@ -78,10 +78,12 @@ def first_vis(data):
             xanchor='right',
             y=1.15,
             yanchor='top',
-            font=dict(color='black')  # Set dropdown text color to black
+            font=dict(color='#333333')  # Dark black dropdown text
         )
     ],
-    font=dict(color='black')  # Set overall text color to black
+    plot_bgcolor='#F7F7F7',  # Set the background color
+    paper_bgcolor='#F7F7F7',  # Set the paper color
+    font=dict(color='#333333')  # Dark black overall text color
 )
 
     # Create the figure
