@@ -330,7 +330,6 @@ def third_vis(data):
         st.plotly_chart(fig)
 
         
-
 def second_vis_alt1(data):
     # Preprocess the data
     data = data.copy()
@@ -359,19 +358,46 @@ def second_vis_alt1(data):
 
     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
 
-    # Create a DataFrame with the average feature values
-    df_avg_values = pd.DataFrame({feature_dropdown: feature_avg_values, 'Popularity Range': sorted_popularities})
+    # Normalize the feature average values between 0 and 1
+    normalized_values = (feature_avg_values - np.min(feature_avg_values)) / (np.max(feature_avg_values) - np.min(feature_avg_values))
 
-    # Create a parallel coordinate plot using pandas' parallel_coordinates
-    fig, ax = plt.subplots(figsize=(8, 6))
-    parallel_coordinates(df_avg_values, 'Popularity Range', colormap='rainbow')
+    # Create a DataFrame with the normalized average feature values
+    df_avg_values = pd.DataFrame({feature_dropdown: normalized_values, 'Popularity Range': sorted_popularities})
 
-    plt.title(f"Average Feature Values by Popularity Range for {feature_dropdown}")
-    plt.xlabel("Popularity Range")
-    plt.ylabel("Average Normalized Value")
+    # Create a radar chart
+    categories = df_avg_values['Popularity Range']
+    values = df_avg_values[feature_dropdown].tolist()
 
-    # Display the parallel coordinate plot
-    st.pyplot(fig)
+    fig = go.Figure(data=go.Scatterpolar(
+        r=values,
+        theta=categories,
+        fill='toself',
+        marker=dict(color='rgb(63, 81, 181)')
+    ))
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1]
+            )
+        ),
+        showlegend=False,
+        title={
+            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    )
+
+    # Display the radar chart
+    col1, col2 = st.columns([1, 16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
