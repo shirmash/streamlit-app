@@ -329,16 +329,16 @@ def third_vis(data):
     with col2:
         st.plotly_chart(fig)
 
-page_bg_img = '''
-<style>
-body {
-background-image: url("https://www.pexels.com/photo/disc-on-grey-surface-1624958/");
-background-size: cover;
-}
-</style>
-'''
 
-st.markdown(page_bg_img, unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    .reportview-container {
+        background: url("https://www.pexels.com/photo/disc-on-grey-surface-1624958/")
+    }
+    </style>
+    """,
+    unsafe_allow_html=True)
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years with this interactive graph. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
