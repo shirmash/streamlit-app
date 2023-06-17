@@ -39,47 +39,45 @@ def first_vis(data):
         if column != 'year':
             line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
             lines.append(line)
-
-    # Create the layout with checklist dropdown
-     layout = go.Layout(
-        title='Average Feature Value per Year',
-        title_x=0.3,  # Set the title position to the center
-        title_y=0.9,  # Set the title position to the upper part
-        xaxis_title='Year',
-        yaxis_title='Average Normalized Value',
-        legend=dict(
-            title='Choose Features',
-            title_font=dict(size=18),
-        ),
-        annotations=[
-            dict(
-                x=1.18,
-                y=0.37,  # Adjust the y-coordinate to position the note below the legend
-                xref='paper',
-                yref='paper',
-                text='One click to remove the feature',
-                showarrow=False,
-                font=dict(size=10),
-            )
-        ],
-        updatemenus=[  # the user can choose to see all features in one click
-            dict(
-                buttons=list([
-                    dict(
-                        label='All',
-                        method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
-                    )
-                ]),
-                direction='down', # the position of the dropdown
-                showactive=True,
-                x=1.1,
-                xanchor='right',
-                y=1.15,
-                yanchor='top'
-            )
-        ]
-    )
+    layout = go.Layout(
+    title='Average Feature Value per Year',
+    title_x=0.3,  # Set the title position to the center
+    title_y=0.9,  # Set the title position to the upper part
+    xaxis_title='Year',
+    yaxis_title='Average Normalized Value',
+    legend=dict(
+        title='Choose Features',
+        title_font=dict(size=18),
+    ),
+    annotations=[
+        dict(
+            x=1.18,
+            y=0.37,  # Adjust the y-coordinate to position the note below the legend
+            xref='paper',
+            yref='paper',
+            text='One click to remove the feature',
+            showarrow=False,
+            font=dict(size=10),
+        )
+    ],
+    updatemenus=[  # the user can choose to see all features in one click
+        dict(
+            buttons=list([
+                dict(
+                    label='All',
+                    method='update',
+                    args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+                )
+            ]),
+            direction='down', # the position of the dropdown
+            showactive=True,
+            x=1.1,
+            xanchor='right',
+            y=1.15,
+            yanchor='top'
+        )
+    ]
+)
 
     # Create the figure
     fig = go.Figure(data=lines, layout=layout)
