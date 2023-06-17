@@ -435,7 +435,7 @@ def second_vis_alt2(data):
     for i, popularity_range in enumerate(popularity_ranges):
         fig.add_trace(go.Scatter(
             x=data['year'],
-            y=avg_values_per_range[i],
+            y=avg_values_per_range[i].tolist(),  # Convert 'y' values to a list
             mode='lines',
             stackgroup='one',
             line=dict(width=0.5, color=f'rgba(63, 81, 181, {1 - (i / len(popularity_ranges))})'),
@@ -465,8 +465,7 @@ def second_vis_alt2(data):
     with col1:
         st.write("")
     with col2:
-        st.plotly_chart(fig)       
-        
+        st.plotly_chart(fig)
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
