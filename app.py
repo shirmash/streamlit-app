@@ -404,49 +404,6 @@ def second_vis_alt1(data):
     with col2:
         st.plotly_chart(fig)
         
-def second_vis_alt2(data):
-        # Preprocess the data
-    data = data.copy()
-    data.drop(["artist", "song"], axis=1, inplace=True)
-
-    # Split the data into train and test sets
-    x = data.drop(["popularity", "year"], axis=1)
-
-    # Exclude 'year' and 'popularity' features from the dropdown menu
-    feature_dropdown = st.selectbox("Feature2:", [col for col in x.columns if col not in ["year", "popularity"]])
-
-    # Calculate the data for each popularity range
-    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-
-    data_per_range = []
-    for popularity_range in reversed(popularity_ranges):
-        data_range = data[data["popularity"].isin(popularity_range)][feature_dropdown]
-        data_per_range.append(data_range)
-
-    # Create the figure
-    fig = px.box(data_per_range, x=data_per_range, y=feature_dropdown, color=data_per_range)
-
-    # Update layout
-    fig.update_layout(
-        yaxis_title="Feature Value",
-        xaxis_title="Popularity Range",
-        title={
-            "text": f"Distribution of {feature_dropdown} across Popularity Ranges",
-            "y": 0.9,
-            "x": 0.5,
-            "xanchor": "center",
-            "yanchor": "top"
-        },
-        width=900,
-        height=500,
-        plot_bgcolor="rgb(255, 255, 255)",
-        paper_bgcolor="rgb(255, 255, 255)",
-    )
-
-    # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)
-
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
@@ -457,7 +414,6 @@ st.write(" A positive SHAP value suggests that as a feature's value increases, i
 second_vis(data)
 second_vis_alt(data)
 second_vis_alt1(data)
-second_vis_alt2(data)
 st.header('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the popularity level, where higher values indicate greater popularity.")
 third_vis(data)
