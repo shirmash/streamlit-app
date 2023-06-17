@@ -8,7 +8,7 @@ import shap
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.io as pio
-import seaborn as sns
+from pandas.plotting import parallel_coordinates
 np.bool = np.bool_
 
 
@@ -330,6 +330,7 @@ def third_vis(data):
         st.plotly_chart(fig)
 
         
+
 def second_vis_alt1(data):
     # Preprocess the data
     data = data.copy()
@@ -358,18 +359,18 @@ def second_vis_alt1(data):
 
     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
 
-    # Reshape the feature_avg_values into a 2D array
-    heatmap_data = np.array(feature_avg_values).reshape(len(feature_avg_values), 1)
+    # Create a DataFrame with the average feature values
+    df_avg_values = pd.DataFrame({feature_dropdown: feature_avg_values, 'Popularity Range': sorted_popularities})
 
-    # Create a heatmap using seaborn
+    # Create a parallel coordinate plot using pandas' parallel_coordinates
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(heatmap_data, annot=True, fmt=".2f", cmap="YlGnBu", cbar=False,
-                xticklabels=[feature_dropdown], yticklabels=sorted_popularities)
-    plt.title(f"Average Feature Values by Popularity Range for {feature_dropdown}")
-    plt.xlabel("Feature")
-    plt.ylabel("Popularity Range")
+    parallel_coordinates(df_avg_values, 'Popularity Range', colormap='rainbow')
 
-    # Display the heatmap
+    plt.title(f"Average Feature Values by Popularity Range for {feature_dropdown}")
+    plt.xlabel("Popularity Range")
+    plt.ylabel("Average Normalized Value")
+
+    # Display the parallel coordinate plot
     st.pyplot(fig)
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
