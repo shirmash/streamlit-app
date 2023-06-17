@@ -343,7 +343,7 @@ def second_vis_alt1(data):
     feature_names = x.columns.tolist()
 
     # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-    feature_dropdown = st.selectbox("Feature2:",
+    feature_dropdown = st.selectbox("Feature1:",
                                     [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
     # Calculate average feature values for each popularity range
@@ -351,67 +351,25 @@ def second_vis_alt1(data):
                          range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
 
     feature_avg_values = []
-    popularity_labels = []
     for popularity_range in reversed(popularity_ranges):
         avg_value = np.mean(data[data['popularity'].isin(popularity_range)][feature_dropdown])
         feature_avg_values.append(avg_value)
-        popularity_labels.append(f"{popularity_range.stop}-{popularity_range.start - 1}")
 
-    # Normalize the feature average values between a small positive value and 1
-    min_value = np.min(feature_avg_values)
-    max_value = np.max(feature_avg_values)
-    if min_value != max_value:
-        normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
-    else:
-        normalized_values = feature_avg_values
+    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
 
-    # Create the scatter plot using go.Scatter and go.Figure
-    fig = go.Figure(data=go.Scatter(
-        x=normalized_values,
-        y=popularity_labels,
-        mode='markers',
-        marker=dict(
-            color='rgb(63, 81, 181)',  # Specify the marker color
-            symbol='circle',  # Specify the marker symbol
-            size=10,  # Specify the marker size
-            line=dict(
-                color='rgb(40, 55, 71)',  # Specify the marker border color
-                width=1.5  # Specify the marker border width
-            ),
-        ),
-        opacity=0.8  # Specify the marker opacity
-    ))
-    fig.update_layout(
-        yaxis_title='Popularity range',
-        xaxis_title='Average Normalized Value',
-        title={
-            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-            'y': 0.9,  # Adjust the y-coordinate to center the title
-            'x': 0.5,  # Set the x-coordinate to the center of the graph
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        yaxis=dict(
-            tickfont=dict(size=10),
-            gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-        ),
-        xaxis=dict(
-            tickfont=dict(size=10),
-            gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-        ),
-        width=900,  # Set the width of the chart
-        height=500,
-        plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
-        paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
-    )
+    # Reshape the feature_avg_values into a 2D array
+    heatmap_data = np.array(feature_avg_values).reshape(len(feature_avg_values), 1)
 
-    # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 16])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
-        
+    # Create a heatmap using seaborn
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(heatmap_data, annot=True, fmt=".2f", cmap="YlGnBu", cbar=False,
+                xticklabels=[feature_dropdown], yticklabels=sorted_popularities)
+    plt.title(f"Average Feature Values by Popularity Range for {feature_dropdown}")
+    plt.xlabel("Feature")
+    plt.ylabel("Popularity Range")
+
+    # Display the heatmap
+    st.pyplot(fig)
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
