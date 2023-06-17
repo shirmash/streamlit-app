@@ -17,7 +17,6 @@ st.title('Visualization: Final Project')
 
 # Load the data
 data = pd.read_csv('songs_normalize.csv')
-data_2 = pd.read_csv('data_2.csv')
 
 def first_vis(data):
     songs_normalize = data.copy()
