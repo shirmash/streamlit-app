@@ -88,7 +88,7 @@ def first_vis(data):
         height=500,  # Set the height of the chart
     )
     # Display the figure
-    col1, col2 = st.columns([1, 18])
+    col1, col2 = st.columns([1, 16])
     with col1:
         st.write("")
     with col2:
@@ -159,11 +159,11 @@ def second_vis(data):
         },
         yaxis=dict(tickfont=dict(size=10)),
         xaxis=dict(tickfont=dict(size=10)),
-        width=1000,  # Set the width of the chart
-        height=700,
+        width=900,  # Set the width of the chart
+        height=500,
     )
     # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 17])
+    col1, col2 = st.columns([1, 16])
     with col1:
         st.write("")
     with col2:
@@ -238,14 +238,14 @@ def second_vis_alt(data):
             tickfont=dict(size=10),
             gridcolor='rgb(238, 238, 238)'  # Specify the grid color
         ),
-        width=1000,  # Set the width of the chart
-        height=700,
+        width=900,  # Set the width of the chart
+        height=500,
         plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
         paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
     )
 
     # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 17])
+    col1, col2 = st.columns([1, 16])
     with col1:
         st.write("")
     with col2:
@@ -318,12 +318,12 @@ def third_vis(data):
     # Create the figure
     fig = go.Figure(data=bars, layout=layout)
     fig.update_layout(
-        width=1000,  # Set the width of the chart
-        height=700,  # Set the height of the chart
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
     )
 
     # Display the figure in Streamlit
-    col1, col2 = st.columns([1,20])
+    col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
     with col2:
