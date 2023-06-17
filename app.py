@@ -51,8 +51,8 @@ def first_vis(data):
     ),
     annotations=[
         dict(
-            x=1.18,
-            y=0.22,  # Adjust the y-coordinate to position the note below the legend
+            x=1.22,
+            y=0.18,  # Adjust the y-coordinate to position the note below the legend
             xref='paper',
             yref='paper',
             text='One click to remove the feature',
