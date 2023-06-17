@@ -343,7 +343,7 @@ def second_vis_alt1(data):
     feature_names = x.columns.tolist()
 
     # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-    feature_dropdown = st.selectbox("Feature:",
+    feature_dropdown = st.selectbox("Feature2:",
                                     [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
     # Calculate average feature values for each popularity range
