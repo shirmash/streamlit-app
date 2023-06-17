@@ -41,7 +41,7 @@ def first_vis(data):
             lines.append(line)
 
     # Create the layout with checklist dropdown
-   layout = go.Layout(
+    layout = go.Layout(
     title='Average Feature Value per Year',
     title_x=0.3,
     title_y=0.9,
