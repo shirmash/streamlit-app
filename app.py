@@ -362,7 +362,7 @@ def second_vis_alt1(data):
     min_value = np.min(feature_avg_values)
     max_value = np.max(feature_avg_values)
     if min_value != max_value:
-        normalized_values = 0.05 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
+        normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
     else:
         normalized_values = feature_avg_values
 
