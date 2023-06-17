@@ -52,7 +52,7 @@ def first_vis(data):
     annotations=[
         dict(
             x=1.18,
-            y=0.3,  # Adjust the y-coordinate to position the note below the legend
+            y=0.22,  # Adjust the y-coordinate to position the note below the legend
             xref='paper',
             yref='paper',
             text='One click to remove the feature',
@@ -81,6 +81,7 @@ def first_vis(data):
 
     # Create the figure
     fig = go.Figure(data=lines, layout=layout)
+    fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
