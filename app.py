@@ -358,8 +358,12 @@ def second_vis_alt1(data):
 
     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
 
-    # Normalize the feature average values between 0 and 1
-    normalized_values = (feature_avg_values - np.min(feature_avg_values)) / (np.max(feature_avg_values) - np.min(feature_avg_values))
+    min_value = np.min(feature_avg_values)
+    max_value = np.max(feature_avg_values)
+    if min_value != max_value:
+        normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
+    else:
+        normalized_values = feature_avg_values
 
     # Create a DataFrame with the normalized average feature values
     df_avg_values = pd.DataFrame({feature_dropdown: normalized_values, 'Popularity Range': sorted_popularities})
