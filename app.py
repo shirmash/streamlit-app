@@ -5,6 +5,7 @@ from sklearn.tree import DecisionTreeRegressor
 import pandas as pd
 import matplotlib.pyplot as plt
 import shap
+import plotly.express as px
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -404,69 +405,48 @@ def second_vis_alt1(data):
         st.plotly_chart(fig)
         
 def second_vis_alt2(data):
-    # Preprocess the data
+        # Preprocess the data
     data = data.copy()
-    la = LabelEncoder()
-    label = la.fit_transform(data["genre"])
-    data["genre"] = label
     data.drop(["artist", "song"], axis=1, inplace=True)
+
     # Split the data into train and test sets
-    x = data.drop(["popularity", 'year'], axis=1)
+    x = data.drop(["popularity", "year"], axis=1)
 
-    # Extract feature names from the original dataset or use x.columns
-    feature_names = x.columns.tolist()
+    # Exclude 'year' and 'popularity' features from the dropdown menu
+    feature_dropdown = st.selectbox("Feature2:", [col for col in x.columns if col not in ["year", "popularity"]])
 
-    # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-    feature_dropdown = st.selectbox("Feature2:",
-                                    [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
-
-    # Calculate average feature values for each popularity range
+    # Calculate the data for each popularity range
     popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
                          range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
 
-    avg_values_per_range = []
-    for popularity_range in popularity_ranges:
-        avg_values = data[data['popularity'].isin(popularity_range)][feature_dropdown].mean()
-        avg_values_per_range.append(avg_values)
+    data_per_range = []
+    for popularity_range in reversed(popularity_ranges):
+        data_range = data[data["popularity"].isin(popularity_range)][feature_dropdown]
+        data_per_range.append(data_range)
 
-    # Create the stacked area chart
-    fig = go.Figure()
+    # Create the figure
+    fig = px.box(data_per_range, x=data_per_range, y=feature_dropdown, color=data_per_range)
 
-    for i, popularity_range in enumerate(popularity_ranges):
-        y_values = avg_values_per_range[i].tolist()  # Convert 'y' values to a list
-        fig.add_trace(go.Scatter(
-            x=data['year'],
-            y=y_values,
-            mode='lines',
-            stackgroup='one',
-            line=dict(width=0.5, color=f'rgba(63, 81, 181, {1 - (i / len(popularity_ranges))})'),
-            name=f"{popularity_range.stop}-{popularity_range.start - 1}"
-        ))
-
+    # Update layout
     fig.update_layout(
-        xaxis_title='Year',
-        yaxis_title='Average Value',
+        yaxis_title="Feature Value",
+        xaxis_title="Popularity Range",
         title={
-            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-            'y': 0.9,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
+            "text": f"Distribution of {feature_dropdown} across Popularity Ranges",
+            "y": 0.9,
+            "x": 0.5,
+            "xanchor": "center",
+            "yanchor": "top"
         },
-        showlegend=True,
-        legend=dict(title='Popularity Range'),
         width=900,
         height=500,
-        plot_bgcolor='rgb(255, 255, 255)',
-        paper_bgcolor='rgb(255, 255, 255)'
+        plot_bgcolor="rgb(255, 255, 255)",
+        paper_bgcolor="rgb(255, 255, 255)",
     )
 
-    # Display the stacked area chart
-    col1, col2 = st.columns([1, 16])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
+    # Display the graph using st.plotly_chart
+    st.plotly_chart(fig)
+
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
