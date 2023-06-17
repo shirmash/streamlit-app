@@ -333,7 +333,7 @@ def third_vis(data):
 page_bg_img = '''
 <style>
 body {
-background-image: url("https://images.unsplash.com/photo-1542281286-9e0a16bb7366");
+background-image: url("https://www.pexels.com/photo/disc-on-grey-surface-1624958/");
 background-size: cover;
 }
 </style>
