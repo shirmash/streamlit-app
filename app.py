@@ -433,9 +433,10 @@ def second_vis_alt2(data):
     fig = go.Figure()
 
     for i, popularity_range in enumerate(popularity_ranges):
+        y_values = avg_values_per_range[i].tolist()  # Convert 'y' values to a list
         fig.add_trace(go.Scatter(
             x=data['year'],
-            y=avg_values_per_range[i].tolist(),  # Convert 'y' values to a list
+            y=y_values,
             mode='lines',
             stackgroup='one',
             line=dict(width=0.5, color=f'rgba(63, 81, 181, {1 - (i / len(popularity_ranges))})'),
