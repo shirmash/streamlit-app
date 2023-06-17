@@ -88,7 +88,7 @@ def first_vis(data):
         height=600,  # Set the height of the chart
     )
     # Display the figure
-    col1, col2 = st.columns([1, 6])
+    col1, col2 = st.columns([1, 8])
     with col1:
         st.write("")
     with col2:
