@@ -84,8 +84,8 @@ def first_vis(data):
     # Create the figure
     fig = go.Figure(data=lines, layout=layout)
     fig.update_layout(
-        width=1000,  # Set the width of the chart
-        height=600,  # Set the height of the chart
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
     )
     # Display the figure
     col1, col2 = st.columns([1, 18])
