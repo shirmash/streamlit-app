@@ -181,6 +181,10 @@ def second_vis_alt(data):
     # Create a figure with subplots for each facet
     fig = make_subplots(rows=2, cols=2, subplot_titles=[f"{start}-{end}" for start, end in year_ranges])
 
+    # Dropdown menu for feature selection
+    feature_names = data.columns.tolist()
+    feature_dropdown = st.selectbox("Feature:", feature_names)
+
     # Iterate over the year ranges and create the facets
     for i, (start_year, end_year) in enumerate(year_ranges):
         facet_data = data[(data['year'] >= start_year) & (data['year'] <= end_year)]
@@ -240,7 +244,11 @@ def second_vis_alt(data):
     )
 
     # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)        
+    st.plotly_chart(fig)
+
+# Example usage
+data = pd.read_csv("your_data.csv")
+second_vis_alt(data)      
 
 #     Display the graph using st.plotl
 # def second_vis_alt(data):
