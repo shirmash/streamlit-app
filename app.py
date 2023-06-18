@@ -63,36 +63,26 @@ def first_vis(data):
         visibility = [i == j for j in range(len(features_names))]
         dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
 
-
+    select_feature = st.selectbox('Choose feature:', features_names)
     # Set the initial visible column
     visible_column = [False] * len(features_names)
-
+    visible_column[0] = True  
     # Set the initial visibility of the bars
     for box, visibility in zip(fig.data, visible_column):
         box.visible = visibility
-
-
-    # Create the initial checklist button for the sentence
-    initial_button = dict(
-        label='Choose feature here',
-        method='update',
-        args=[{'visible': [False] * len(features_names)}, {'title': 'Choose feature here', 'subtitle': ''}]
-    )
-
-    buttons = [initial_button] + dropdown_options
 
     # Update the layout
     fig.update_layout(
         title='Feature Values by Popularity Ranges',
         xaxis_title='Popularity Ranges',
         yaxis_title='Feature Values',
-        title_x=0.5,  # Set the title position to the center
+        title_x=0.35,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
         showlegend=False,
-        updatemenus=[{'buttons': buttons, 'direction': 'down', 'showactive': True, 'x': 1.1, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
+        updatemenus=[{'buttons': dropdown_options, 'direction': 'down', 'showactive': True, 'x': 1.1, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
     )
     # Create the figure
-    # fig = go.Figure(data=lines, layout=layout)
+    
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
         width=900,  # Set the width of the chart
