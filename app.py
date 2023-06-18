@@ -79,7 +79,7 @@ def first_vis(data):
         title_x=0.35,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
         showlegend=False,
-        updatemenus=[{'buttons': dropdown_options, 'direction': 'down', 'showactive': True, 'x': 1.1, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
+        updatemenus=[{'buttons': dropdown_options, 'direction': 'down', 'showactive': True, 'x': 1.0, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
     )
     # Create the figure
     
