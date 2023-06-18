@@ -64,22 +64,24 @@ def first_vis(data):
     visible_column = [column == select_feature for column in features_names]
     for box, visibility in zip(fig.data, visible_column):
         box.visible = visibility
-        
-    # Set the initial visible column
-    # visible_column = [False] * len(features_names)
-    # visible_column[0] = True  
     
     # Update the layout
     fig.update_layout(
-        title='Feature Values by Popularity Ranges',
+         title={
+            'text': f"{feature_dropdown} by Popularity Ranges",
+            'y': 0.9,  # Adjust the y-coordinate to center the title
+            'x': 0.5,  # Set the x-coordinate to the center of the graph
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
         xaxis_title='Popularity Ranges',
         yaxis_title='Feature Values',
         title_x=0.35,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
-        showlegend=False
+        showlegend=False   
     )
-    # Create the figure
     
+    # Create the figure    
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
         width=900,  # Set the width of the chart
