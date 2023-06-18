@@ -166,6 +166,7 @@ def second_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
+        
 def second_vis_alt(data):
     # Preprocess the data
     data = data.copy()
@@ -181,6 +182,8 @@ def second_vis_alt(data):
 
     # Define year ranges for faceting
     year_ranges = [(1998, 2004), (2005, 2010), (2011, 2016), (2017, 2020)]
+
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[f"Year Range: {yr[0]}-{yr[1]}" for yr in year_ranges])
 
     for i, year_range in enumerate(year_ranges):
         # Subset the data based on the year range
@@ -209,8 +212,8 @@ def second_vis_alt(data):
         else:
             normalized_values = feature_avg_values
 
-        # Create the bar chart using go.Bar and go.Figure
-        fig = go.Figure(data=go.Bar(
+        # Create the bar chart using go.Bar
+        bar_chart = go.Bar(
             x=normalized_values,
             y=sorted_popularities,
             orientation='h',
@@ -222,37 +225,23 @@ def second_vis_alt(data):
                 )
             ),
             opacity=0.8  # Specify the bar opacity
-        ))
-        fig.update_layout(
-            yaxis_title='Popularity range',
-            xaxis_title='Average Normalized Value',
-            title={
-                'text': f"Average Feature Values by Popularity Range for {feature_dropdown} (Year Range: {year_range[0]}-{year_range[1]})",
-                'y': 0.9,  # Adjust the y-coordinate to center the title
-                'x': 0.5,  # Set the x-coordinate to the center of the graph
-                'xanchor': 'center',
-                'yanchor': 'top'
-            },
-            yaxis=dict(
-                tickfont=dict(size=10),
-                gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-            ),
-            xaxis=dict(
-                tickfont=dict(size=10),
-                gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-            ),
-            width=900,  # Set the width of the chart
-            height=500,
-            plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
-            paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
         )
 
-        # Display the graph using st.plotly_chart
-        col1, col2 = st.columns([1, 16])
-        with col1:
-            st.write("")
-        with col2:
-            st.plotly_chart(fig)
+        # Add the bar chart to the corresponding subplot
+        row = i // 2 + 1
+        col = i % 2 + 1
+        fig.add_trace(bar_chart, row=row, col=col)
+
+    fig.update_layout(
+        height=600,
+        width=800,
+        showlegend=False,
+        title_text="Average Feature Values by Popularity Range for Different Year Ranges",
+        title_font=dict(size=18)
+    )
+
+    # Display the graph using st.plotly_chart
+    st.plotly_chart(fig)
 
 
 # def second_vis_alt(data):
