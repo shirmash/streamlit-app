@@ -85,7 +85,7 @@ def first_vis(data):
     
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
-        title_font=dict(size=20, bold=True),ה
+        title_font=dict(size=20, bold=True),
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
