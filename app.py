@@ -23,66 +23,76 @@ data = pd.read_csv('songs_normalize.csv')
 def first_vis(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
-
+    songs_normalize.sort_values('popularity', inplace=True)
     scaler = MinMaxScaler()
-    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','explicit'])])
+    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
+
+    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
+                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9,0,-1)]  
+    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
+    def map_to_range(value):
+    for i, rng in enumerate(popularity_ranges):
+      if value == 0:
+        return f"{0}-{8}"
+      elif value in rng:         
+        return f"{rng.stop}-{rng.start-1}"
+            
+    songs_normalize['PopularityRange'] = songs_normalize['popularity'].apply(map_to_range)
     # Get the columns names and save only the relevant ones
+    songs_normalize = songs_normalize.drop('popularity', axis=1)
+    
+    #get the columns names and save only the relevents
     column_names = list(songs_normalize.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year','popularity']
+    features_to_remove = ['song', 'artist','genre', 'year','PopularityRange']
     features_names = [item for item in column_names if item not in features_to_remove]
+
     # Convert non-numeric columns to numeric
-    non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
-    songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-    avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
+    # non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
+    # songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+    # avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
 
-    # Create the lines for the plot
-    lines = []
-    for column in avg_popularity.columns:
-        if column != 'year':
-            line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
-            lines.append(line)
-    layout = go.Layout(
-    title='Average Feature Value per Year',
-    title_x=0.3,  # Set the title position to the center
-    title_y=0.9,  # Set the title position to the upper part
-    xaxis_title='Year',
-    yaxis_title='Average Normalized Value',
-    legend=dict(
-        title='Choose Features',
-        title_font=dict(size=18),
-    ),
-    annotations=[
-        dict(
-            x=1.2,
-            y=0.14,  # Adjust the y-coordinate to position the note below the legend
-            xref='paper',
-            yref='paper',
-            text='One click to remove the feature',
-            showarrow=False,
-            font=dict(size=10),
-        )
-    ],
-    updatemenus=[  # the user can choose to see all features in one click
-        dict(
-            buttons=list([
-                dict(
-                    label='All',
-                    method='update',
-                    args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
-                )
-            ]),
-            direction='down', # the position of the dropdown
-            showactive=True,
-            x=1.1,
-            xanchor='right',
-            y=1.15,
-            yanchor='top'
-        )
-    ]
-)
+    fig = go.Figure()
+    # Create the boxes for the plot
+    boxes = []
+    for column in features_names:
+      fig.add_trace(go.Box(y=songs_normalize[column], x=songs_normalize['PopularityRange'], name=column))
+  
+    # Create dropdown menu options
+    dropdown_options = []
+    for i, feature in enumerate(features_names):
+        visibility = [i == j for j in range(len(features_names))]
+        dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
 
+
+    # Set the initial visible column
+    visible_column = [False] * len(features_names)
+
+    # Set the initial visibility of the bars
+    for box, visibility in zip(fig.data, visible_column):
+        box.visible = visibility
+
+
+    # Create the initial checklist button for the sentence
+    initial_button = dict(
+        label='Choose feature here',
+        method='update',
+        args=[{'visible': [False] * len(features_names)}, {'title': 'Choose feature here', 'subtitle': ''}]
+    )
+
+    buttons = [initial_button] + dropdown_options
+
+    # Update the layout
+    fig.update_layout(
+        title='Feature Values by Popularity Ranges',
+        xaxis_title='Popularity Ranges',
+        yaxis_title='Feature Values',
+        title_x=0.5,  # Set the title position to the center
+        title_y=0.9,  # Set the title position to the upper part
+        showlegend=False,
+        updatemenus=[{'buttons': buttons, 'direction': 'down', 'showactive': True, 'x': 1.1, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
+    )
     # Create the figure
-    fig = go.Figure(data=lines, layout=layout)
+    # fig = go.Figure(data=lines, layout=layout)
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
         width=900,  # Set the width of the chart
