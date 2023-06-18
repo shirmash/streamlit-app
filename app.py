@@ -68,7 +68,7 @@ def first_vis(data):
     # Update the layout
     fig.update_layout(
          title={
-            'text': f"{feature_dropdown} by Popularity Ranges",
+            'text': f"{select_feature} by Popularity Ranges",
             'y': 0.9,  # Adjust the y-coordinate to center the title
             'x': 0.5,  # Set the x-coordinate to the center of the graph
             'xanchor': 'center',
