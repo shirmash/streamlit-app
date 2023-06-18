@@ -286,10 +286,13 @@ def second_vis_alt_alt(data):
         else:
             normalized_values = feature_avg_values
 
+        # Convert normalized values to a regular list
+        normalized_values = normalized_values.tolist()
+
         # Create the bar chart for the facet
         for j, (start_year, end_year) in enumerate(year_ranges):
             fig.add_trace(go.Bar(
-                x=normalized_values[j],
+                x=[normalized_values[j]],
                 y=[f"{start_year}-{end_year}"],
                 orientation='h',
                 marker=dict(
@@ -321,11 +324,15 @@ def second_vis_alt_alt(data):
             tickfont=dict(size=10),
             gridcolor='rgb(238, 238, 238)'
         ),
-        width=800,
-        height=600
+        width=900,
+        height=600,
+        plot_bgcolor='rgb(255, 255, 255)',
+        paper_bgcolor='rgb(255, 255, 255)',
     )
 
+    # Display the graph using st.plotly_chart
     st.plotly_chart(fig)
+
 # def second_vis_alt(data):
 #     # Preprocess the data
 #     data = data.copy()
