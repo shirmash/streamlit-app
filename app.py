@@ -187,28 +187,28 @@ def second_vis_alt(data):
     # Create a single dropdown menu for feature selection
     feature_dropdown = st.selectbox("Feature:", [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
-    # Calculate average feature values for each year range
-    feature_avg_values = []
-    for year_range in year_ranges:
-        avg_value = np.mean(data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])][feature_dropdown])
-        feature_avg_values.append(avg_value)
-
     # Create a DataFrame for plotting
     df = pd.DataFrame({'Year Range': [f"{range[0]}-{range[1]}" for range in year_ranges],
-                       'Average Value': feature_avg_values})
+                       'Average Value': np.nan})
 
-    # Create the bar chart using Plotly Express
-    fig = px.bar(df, x='Average Value', y='Year Range', orientation='h', color='Average Value',
-                 color_continuous_scale='Blues', labels={'Average Value': feature_dropdown})
+    # Calculate average feature values for each year range and update the DataFrame
+    for i, year_range in enumerate(year_ranges):
+        avg_value = np.mean(data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])][feature_dropdown])
+        df.loc[i, 'Average Value'] = avg_value
+
+    # Create the bar chart using Plotly Express with facet_row parameter
+    fig = px.bar(df, x='Average Value', y='Year Range', color='Average Value',
+                 facet_row='Year Range', labels={'Average Value': feature_dropdown})
 
     # Update the chart layout
     fig.update_layout(
-        height=500,
+        height=500 * len(year_ranges),
         width=800,
         title_text=f"Average Feature Values by Year Range - {feature_dropdown}",
         title_font=dict(size=18),
         xaxis=dict(title='Average Value'),
-        yaxis=dict(title='Year Range')
+        yaxis=dict(title='Year Range'),
+        showlegend=False
     )
 
     # Display the graph using st.plotly_chart
