@@ -233,6 +233,7 @@ def second_vis_alt(data):
         col = i % 2 + 1
         fig.add_trace(bar_chart, row=row, col=col)
 
+    # Update the subplot layout
     fig.update_layout(
         height=600,
         width=800,
@@ -240,6 +241,8 @@ def second_vis_alt(data):
         title_text="Average Feature Values by Popularity Range for Different Year Ranges",
         title_font=dict(size=18)
     )
+
+    # Display the graph using st.plotly_chart
     st.plotly_chart(fig)
 
     # Display the graph using st.plotl
