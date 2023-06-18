@@ -46,11 +46,6 @@ def first_vis(data):
     features_to_remove = ['song', 'artist','genre', 'year','PopularityRange']
     features_names = [item for item in column_names if item not in features_to_remove]
 
-    # Convert non-numeric columns to numeric
-    # non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
-    # songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-    # avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
-
     fig = go.Figure()
     # Create the boxes for the plot
     boxes = []
@@ -64,13 +59,16 @@ def first_vis(data):
     #     dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
 
     select_feature = st.selectbox('Choose feature:', features_names)
-    # Set the initial visible column
-    visible_column = [False] * len(features_names)
-    visible_column[0] = True  
-    # Set the initial visibility of the bars
+
+    # Set the visibility of the bars based on the selected genre
+    visible_column = [column == select_feature for column in features_names]
     for box, visibility in zip(fig.data, visible_column):
         box.visible = visibility
-
+        
+    # Set the initial visible column
+    # visible_column = [False] * len(features_names)
+    # visible_column[0] = True  
+    
     # Update the layout
     fig.update_layout(
         title='Feature Values by Popularity Ranges',
