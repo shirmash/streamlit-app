@@ -10,6 +10,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.io as pio
 from pandas.plotting import parallel_coordinates
+from plotly.subplots import make_subplots
 np.bool = np.bool_
 
 
