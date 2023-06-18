@@ -240,7 +240,7 @@ def second_vis_alt(data):
         title_text="Average Feature Values by Popularity Range for Different Year Ranges",
         title_font=dict(size=18)
     )
-     st.plotly_chart(fig)
+    st.plotly_chart(fig)
 
     # Display the graph using st.plotl
 # def second_vis_alt(data):
