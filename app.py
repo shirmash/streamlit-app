@@ -168,6 +168,8 @@ def second_vis(data):
     with col2:
         st.plotly_chart(fig)
         
+
+    Display the graph using st.plotl
 def second_vis_alt(data):
     # Preprocess the data
     data = data.copy()
@@ -181,133 +183,87 @@ def second_vis_alt(data):
     # Extract feature names from the original dataset or use x.columns
     feature_names = x.columns.tolist()
 
-    # Define year ranges for faceting
-    year_ranges = [(1998, 2004), (2005, 2010), (2011, 2016), (2017, 2020)]
+    # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
+    feature_dropdown = st.selectbox("Feature:",
+                                    [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
-    # Create a single dropdown menu for feature selection
-    feature_dropdown = st.selectbox("Feature:", [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
+    # Calculate average feature values for each popularity range
+    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
+                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
 
-    # Create a DataFrame for plotting
-    df = pd.DataFrame({'Year Range': [f"{range[0]}-{range[1]}" for range in year_ranges],
-                       'Average Value': np.nan})
+    feature_avg_values = []
+    for popularity_range in reversed(popularity_ranges):
+        avg_value = np.mean(data[data['popularity'].isin(popularity_range)][feature_dropdown])
+        feature_avg_values.append(avg_value)
 
-    # Calculate average feature values for each year range and update the DataFrame
-    for i, year_range in enumerate(year_ranges):
-        avg_value = np.mean(data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])][feature_dropdown])
-        df.loc[i, 'Average Value'] = avg_value
+    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
 
-    # Create the bar chart using Plotly Express with facet_row parameter
-    fig = px.bar(df, x='Average Value', y='Year Range', color='Average Value',
-                 facet_row='Year Range', labels={'Average Value': feature_dropdown})
+    # Normalize the feature average values between a small positive value and 1
+    min_value = np.min(feature_avg_values)
+    max_value = np.max(feature_avg_values)
+    if min_value != max_value:
+        normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
+    else:
+        normalized_values = feature_avg_values
 
-    # Update the chart layout
+    # Create the bar chart using go.Bar and go.Figure
+    fig = go.Figure(data=go.Bar(
+        x=normalized_values,
+        y=sorted_popularities,
+        orientation='h',
+        marker=dict(
+            color='rgb(63, 81, 181)',  # Specify the bar color
+            line=dict(
+                color='rgb(40, 55, 71)',  # Specify the bar border color
+                width=1.5  # Specify the bar border width
+            )
+        ),
+        opacity=0.8  # Specify the bar opacity
+    ))
     fig.update_layout(
-        height=500 * len(year_ranges),
-        width=800,
-        title_text=f"Average Feature Values by Year Range - {feature_dropdown}",
-        title_font=dict(size=18),
-        xaxis=dict(title='Average Value'),
-        yaxis=dict(title='Year Range'),
-        showlegend=False
+        yaxis_title='Popularity range',
+        xaxis_title='Average Normalized Value',
+        title={
+            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
+            'y': 0.9,  # Adjust the y-coordinate to center the title
+            'x': 0.5,  # Set the x-coordinate to the center of the graph
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        yaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'  # Specify the grid color
+        ),
+        xaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'  # Specify the grid color
+        ),
+        width=900,  # Set the width of the chart
+        height=500,
+        plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
+        paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
     )
 
     # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)
-    # Display the graph using st.plotl
-# def second_vis_alt(data):
-#     # Preprocess the data
-#     data = data.copy()
-#     la = LabelEncoder()
-#     label = la.fit_transform(data["genre"])
-#     data["genre"] = label
-#     data.drop(["artist", "song"], axis=1, inplace=True)
-#     # Split the data into train and test sets
-#     x = data.drop(["popularity", 'year'], axis=1)
+    col1, col2 = st.columns([1, 16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
 
-#     # Extract feature names from the original dataset or use x.columns
-#     feature_names = x.columns.tolist()
+def display_side_by_side(data):
+    # Create two columns for side-by-side display
+    col1, col2 = st.columns(2)
 
-#     # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-#     feature_dropdown = st.selectbox("Feature:",
-#                                     [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
+    # Display the first graph in the first column
+    with col1:
+        fig1 = second_vis(data, key_suffix="_1")
+        st.pyplot(fig1)
 
-#     # Calculate average feature values for each popularity range
-#     popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-#                          range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-
-#     feature_avg_values = []
-#     for popularity_range in reversed(popularity_ranges):
-#         avg_value = np.mean(data[data['popularity'].isin(popularity_range)][feature_dropdown])
-#         feature_avg_values.append(avg_value)
-
-#     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-#     # Normalize the feature average values between a small positive value and 1
-#     min_value = np.min(feature_avg_values)
-#     max_value = np.max(feature_avg_values)
-#     if min_value != max_value:
-#         normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
-#     else:
-#         normalized_values = feature_avg_values
-
-#     # Create the bar chart using go.Bar and go.Figure
-#     fig = go.Figure(data=go.Bar(
-#         x=normalized_values,
-#         y=sorted_popularities,
-#         orientation='h',
-#         marker=dict(
-#             color='rgb(63, 81, 181)',  # Specify the bar color
-#             line=dict(
-#                 color='rgb(40, 55, 71)',  # Specify the bar border color
-#                 width=1.5  # Specify the bar border width
-#             )
-#         ),
-#         opacity=0.8  # Specify the bar opacity
-#     ))
-#     fig.update_layout(
-#         yaxis_title='Popularity range',
-#         xaxis_title='Average Normalized Value',
-#         title={
-#             'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-#             'y': 0.9,  # Adjust the y-coordinate to center the title
-#             'x': 0.5,  # Set the x-coordinate to the center of the graph
-#             'xanchor': 'center',
-#             'yanchor': 'top'
-#         },
-#         yaxis=dict(
-#             tickfont=dict(size=10),
-#             gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-#         ),
-#         xaxis=dict(
-#             tickfont=dict(size=10),
-#             gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-#         ),
-#         width=900,  # Set the width of the chart
-#         height=500,
-#         plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
-#         paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
-#     )
-
-#     # Display the graph using st.plotly_chart
-#     col1, col2 = st.columns([1, 16])
-#     with col1:
-#         st.write("")
-#     with col2:
-#         st.plotly_chart(fig)
-
-# def display_side_by_side(data):
-#     # Create two columns for side-by-side display
-#     col1, col2 = st.columns(2)
-#
-#     # Display the first graph in the first column
-#     with col1:
-#         fig1 = second_vis(data, key_suffix="_1")
-#         st.pyplot(fig1)
-#
-#     # Display the second graph in the second column
-#     with col2:
-#         fig2 = second_vis(data, key_suffix="_2")
-#         st.pyplot(fig2)
+    # Display the second graph in the second column
+    with col2:
+        fig2 = second_vis(data, key_suffix="_2")
+        st.pyplot(fig2)
 
 # Set the default Plotly renderer to be 'iframe' for better rendering in Streamlit
 pio.renderers.default = 'iframe'
