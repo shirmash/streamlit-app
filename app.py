@@ -74,7 +74,6 @@ def first_vis(data):
     # Update the layout
     fig.update_layout(
         title='Feature Values by Popularity Ranges',
-        title_font=dict(size=20, bold=True),
         xaxis_title='Popularity Ranges',
         yaxis_title='Feature Values',
         title_x=0.35,  # Set the title position to the center
@@ -86,6 +85,7 @@ def first_vis(data):
     
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(
+        title_font=dict(size=20, bold=True),ה
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
