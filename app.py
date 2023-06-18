@@ -207,6 +207,8 @@ def second_vis_alt(data):
             normalized_values = feature_avg_values
 
         # Create the bar chart for the facet
+        row = (i // 2) + 1
+        col = (i % 2) + 1
         fig.add_trace(go.Bar(
             x=normalized_values,
             y=[f"Popularity {p.start}-{p.stop-1}" for p in popularity_ranges],
@@ -218,8 +220,9 @@ def second_vis_alt(data):
                     width=1.5
                 )
             ),
-            opacity=0.8
-        ), row=1, col=i+1)
+            opacity=0.8,
+            showlegend=False
+        ), row=row, col=col)
 
     fig.update_layout(
         yaxis_title='Popularity Range',
@@ -239,12 +242,11 @@ def second_vis_alt(data):
             tickfont=dict(size=10),
             gridcolor='rgb(238, 238, 238)'
         ),
-        width=1000,
-        height=400
+        width=800,
+        height=600
     )
 
     st.plotly_chart(fig)
-
 # def second_vis_alt(data):
 #     # Preprocess the data
 #     data = data.copy()
