@@ -247,7 +247,7 @@ def second_vis_alt(data):
     )
 
     st.plotly_chart(fig)
- def second_vis_alt_alt(data):
+def second_vis_alt_alt(data):
     # Preprocess the data
     data = data.copy()
     la = LabelEncoder()
