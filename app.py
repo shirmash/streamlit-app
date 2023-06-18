@@ -176,7 +176,10 @@ def second_vis_alt(data):
     data.drop(["artist", "song"], axis=1, inplace=True)
 
     # Define the year ranges for the facets
-    year_ranges = [(1998, 2007), (2008, 2016), (2017, 2020)]
+    year_ranges = [(1998, 2003), (2004, 2009), (2010, 2015), (2016, 2020)]
+
+    # Define the popularity ranges
+    popularity_ranges = [range(0, 18), range(18, 36), range(36, 54), range(54, 72), range(72, 90)]
 
     # Dropdown menu for feature selection
     feature_names = data.columns.tolist()
@@ -190,48 +193,56 @@ def second_vis_alt(data):
         facet_data = data[(data['year'] >= start_year) & (data['year'] <= end_year)]
 
         # Calculate average feature values for each popularity range in the facet
-        popularity_ranges = [range(89, 69, -1), range(69, 49, -1), range(49, 29, -1), range(29, 9, -1)]
-
         feature_avg_values = []
-        for popularity_range in reversed(popularity_ranges):
+        for popularity_range in popularity_ranges:
             avg_value = facet_data[facet_data['popularity'].isin(popularity_range)][feature_dropdown].mean()
             feature_avg_values.append(avg_value)
 
-        sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-        # Normalize the feature average values between a small positive value and 1
+        # Normalize the feature average values between 0 and 1
         min_value = min(feature_avg_values)
         max_value = max(feature_avg_values)
-        normalized_values = [0.01 + (value - min_value) / (max_value - min_value) * 0.99 for value in feature_avg_values]
+        if min_value != max_value:
+            normalized_values = (feature_avg_values - min_value) / (max_value - min_value)
+        else:
+            normalized_values = feature_avg_values
 
-        # Create the bar chart using go.Bar and add it to the corresponding subplot
+        # Create the bar chart for the facet
         fig.add_trace(go.Bar(
             x=normalized_values,
-            y=sorted_popularities,
+            y=[f"Popularity {p.start}-{p.stop-1}" for p in popularity_ranges],
             orientation='h',
             marker=dict(
-                color='rgb(63, 81, 181)',  # Specify the bar color
+                color='rgb(63, 81, 181)',
                 line=dict(
-                    color='rgb(40, 55, 71)',  # Specify the bar border color
-                    width=1.5  # Specify the bar border width
+                    color='rgb(40, 55, 71)',
+                    width=1.5
                 )
             ),
-            opacity=0.8  # Specify the bar opacity
+            opacity=0.8
         ), row=1, col=i+1)
 
-        # Set the title for each facet
-        fig.update_xaxes(title_text='Average Normalized Value', row=1, col=i+1)
-        fig.update_yaxes(title_text='Popularity range', row=1, col=i+1)
-
-    # Update layout for the overall figure
     fig.update_layout(
-        height=500,
-        width=900,
-        showlegend=False,
-        title=f"Average Feature Values by Popularity Range for {feature_dropdown}"
+        yaxis_title='Popularity Range',
+        xaxis_title='Average Normalized Value',
+        title={
+            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        yaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'
+        ),
+        xaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'
+        ),
+        width=1000,
+        height=400
     )
 
-    # Display the graph using st.plotly_chart
     st.plotly_chart(fig)
 
 # def second_vis_alt(data):
