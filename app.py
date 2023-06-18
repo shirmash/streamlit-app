@@ -187,18 +187,28 @@ def second_vis_alt(data):
     # Create a single dropdown menu for feature selection
     feature_dropdown = st.selectbox("Feature:", [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
-    # Create a facet grid using Plotly Express
-    fig = px.bar(data, x=feature_dropdown, y="popularity", facet_col="year", facet_col_wrap=2,
-                 category_orders={"year": ["1998-2004", "2005-2010", "2011-2016", "2017-2020"]},
-                 labels={"popularity": "Popularity Range", feature_dropdown: "Average Value"},
-                 color_discrete_sequence=['rgb(63, 81, 181)'])
+    # Calculate average feature values for each year range
+    feature_avg_values = []
+    for year_range in year_ranges:
+        avg_value = np.mean(data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])][feature_dropdown])
+        feature_avg_values.append(avg_value)
 
-    # Update the facet grid layout
+    # Create a DataFrame for plotting
+    df = pd.DataFrame({'Year Range': [f"{range[0]}-{range[1]}" for range in year_ranges],
+                       'Average Value': feature_avg_values})
+
+    # Create the bar chart using Plotly Express
+    fig = px.bar(df, x='Average Value', y='Year Range', orientation='h', color='Average Value',
+                 color_continuous_scale='Blues', labels={'Average Value': feature_dropdown})
+
+    # Update the chart layout
     fig.update_layout(
-        height=600,
+        height=500,
         width=800,
-        title_text=f"Average Feature Values by Popularity Range for Different Year Ranges - {feature_dropdown}",
-        title_font=dict(size=18)
+        title_text=f"Average Feature Values by Year Range - {feature_dropdown}",
+        title_font=dict(size=18),
+        xaxis=dict(title='Average Value'),
+        yaxis=dict(title='Year Range')
     )
 
     # Display the graph using st.plotly_chart
