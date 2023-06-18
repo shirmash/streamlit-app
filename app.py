@@ -241,10 +241,7 @@ def second_vis_alt(data):
         title_font=dict(size=18)
     )
 
-    # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)
-
-
+    # Display the graph using st.plotl
 # def second_vis_alt(data):
 #     # Preprocess the data
 #     data = data.copy()
