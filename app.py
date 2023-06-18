@@ -57,11 +57,11 @@ def first_vis(data):
     for column in features_names:
       fig.add_trace(go.Box(y=songs_normalize[column], x=songs_normalize['PopularityRange'], name=column))
   
-    # Create dropdown menu options
-    dropdown_options = []
-    for i, feature in enumerate(features_names):
-        visibility = [i == j for j in range(len(features_names))]
-        dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
+    # # Create dropdown menu options
+    # dropdown_options = []
+    # for i, feature in enumerate(features_names):
+    #     visibility = [i == j for j in range(len(features_names))]
+    #     dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
 
     select_feature = st.selectbox('Choose feature:', features_names)
     # Set the initial visible column
@@ -78,8 +78,7 @@ def first_vis(data):
         yaxis_title='Feature Values',
         title_x=0.35,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
-        showlegend=False,
-        updatemenus=[{'buttons': dropdown_options, 'direction': 'down', 'showactive': True, 'x': 1.0, 'xanchor': 'right', 'y': 1.15, 'yanchor': 'top'}]
+        showlegend=False
     )
     # Create the figure
     
