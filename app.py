@@ -184,15 +184,15 @@ def second_vis_alt(data):
     # Define year ranges for faceting
     year_ranges = [(1998, 2004), (2005, 2010), (2011, 2016), (2017, 2020)]
 
+    # Create the subplot figure
     fig = make_subplots(rows=2, cols=2, subplot_titles=[f"Year Range: {yr[0]}-{yr[1]}" for yr in year_ranges])
+
+    # Create a single dropdown menu for feature selection
+    feature_dropdown = st.selectbox("Feature:", [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
     for i, year_range in enumerate(year_ranges):
         # Subset the data based on the year range
         subset_data = data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])]
-
-        # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-        feature_dropdown = st.selectbox(f"Feature (Year Range: {year_range[0]}-{year_range[1]})",
-                                        [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
         # Calculate average feature values for each popularity range
         popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
