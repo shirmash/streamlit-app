@@ -167,6 +167,7 @@ def second_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
+
 def second_vis_alt(data):
     # Preprocess the data
     data = data.copy()
@@ -208,21 +209,22 @@ def second_vis_alt(data):
         else:
             normalized_values = feature_avg_values
 
-        # Create the bar chart for the facet
-        fig.add_trace(go.Bar(
-            x=normalized_values,
-            y=sorted_popularities,
-            orientation='h',
-            marker=dict(
-                color='rgb(63, 81, 181)',  # Specify the bar color
-                line=dict(
-                    color='rgb(40, 55, 71)',  # Specify the bar border color
-                    width=1.5  # Specify the bar border width
-                )
-            ),
-            opacity=0.8,  # Specify the bar opacity
-            showlegend=False
-        ), row=i // 2 + 1, col=i % 2 + 1)
+        # Create the bar chart for the facet if there is data
+        if len(feature_avg_values) > 0:
+            fig.add_trace(go.Bar(
+                x=normalized_values,
+                y=sorted_popularities,
+                orientation='h',
+                marker=dict(
+                    color='rgb(63, 81, 181)',  # Specify the bar color
+                    line=dict(
+                        color='rgb(40, 55, 71)',  # Specify the bar border color
+                        width=1.5  # Specify the bar border width
+                    )
+                ),
+                opacity=0.8,  # Specify the bar opacity
+                showlegend=False
+            ), row=i // 2 + 1, col=i % 2 + 1)
 
     # Update layout and axes for the overall figure
     fig.update_layout(
@@ -244,7 +246,8 @@ def second_vis_alt(data):
     )
 
     # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)    
+    st.plotly_chart(fig)
+
 
 #     Display the graph using st.plotl
 # def second_vis_alt(data):
