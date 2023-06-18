@@ -184,67 +184,25 @@ def second_vis_alt(data):
     # Define year ranges for faceting
     year_ranges = [(1998, 2004), (2005, 2010), (2011, 2016), (2017, 2020)]
 
-    # Create the subplot figure
-    fig = make_subplots(rows=2, cols=2, subplot_titles=[f"Year Range: {yr[0]}-{yr[1]}" for yr in year_ranges])
-
     # Create a single dropdown menu for feature selection
     feature_dropdown = st.selectbox("Feature:", [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
 
-    for i, year_range in enumerate(year_ranges):
-        # Subset the data based on the year range
-        subset_data = data[(data['year'] >= year_range[0]) & (data['year'] <= year_range[1])]
+    # Create a facet grid using Plotly Express
+    fig = px.bar(data, x=feature_dropdown, y="popularity", facet_col="year", facet_col_wrap=2,
+                 category_orders={"year": ["1998-2004", "2005-2010", "2011-2016", "2017-2020"]},
+                 labels={"popularity": "Popularity Range", feature_dropdown: "Average Value"},
+                 color_discrete_sequence=['rgb(63, 81, 181)'])
 
-        # Calculate average feature values for each popularity range
-        popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-                             range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-
-        feature_avg_values = []
-        for popularity_range in reversed(popularity_ranges):
-            avg_value = np.mean(subset_data[subset_data['popularity'].isin(popularity_range)][feature_dropdown])
-            feature_avg_values.append(avg_value)
-
-        sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-        # Normalize the feature average values between a small positive value and 1
-        min_value = np.min(feature_avg_values)
-        max_value = np.max(feature_avg_values)
-        if min_value != max_value:
-            normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
-        else:
-            normalized_values = feature_avg_values
-
-        # Create the bar chart using go.Bar
-        bar_chart = go.Bar(
-            x=normalized_values,
-            y=sorted_popularities,
-            orientation='h',
-            marker=dict(
-                color='rgb(63, 81, 181)',  # Specify the bar color
-                line=dict(
-                    color='rgb(40, 55, 71)',  # Specify the bar border color
-                    width=1.5  # Specify the bar border width
-                )
-            ),
-            opacity=0.8  # Specify the bar opacity
-        )
-
-        # Add the bar chart to the corresponding subplot
-        row = i // 2 + 1
-        col = i % 2 + 1
-        fig.add_trace(bar_chart, row=row, col=col)
-
-    # Update the subplot layout
+    # Update the facet grid layout
     fig.update_layout(
         height=600,
         width=800,
-        showlegend=False,
-        title_text="Average Feature Values by Popularity Range for Different Year Ranges",
+        title_text=f"Average Feature Values by Popularity Range for Different Year Ranges - {feature_dropdown}",
         title_font=dict(size=18)
     )
 
     # Display the graph using st.plotly_chart
     st.plotly_chart(fig)
-
     # Display the graph using st.plotl
 # def second_vis_alt(data):
 #     # Preprocess the data
