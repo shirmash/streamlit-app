@@ -247,6 +247,85 @@ def second_vis_alt(data):
     )
 
     st.plotly_chart(fig)
+ def second_vis_alt_alt(data):
+    # Preprocess the data
+    data = data.copy()
+    la = LabelEncoder()
+    label = la.fit_transform(data["genre"])
+    data["genre"] = label
+    data.drop(["artist", "song"], axis=1, inplace=True)
+
+    # Define the year ranges
+    year_ranges = [(1998, 2003), (2004, 2009), (2010, 2015), (2016, 2020)]
+
+    # Define the popularity ranges
+    popularity_ranges = [range(0, 18), range(18, 36), range(36, 54), range(54, 72), range(72, 90)]
+
+    # Dropdown menu for feature selection
+    feature_names = data.columns.tolist()
+    feature_dropdown = st.selectbox("Feature2:", feature_names)
+
+    # Create a figure with subplots for each popularity range
+    fig = make_subplots(rows=len(popularity_ranges), cols=1, subplot_titles=[f"Popularity {p.start}-{p.stop-1}" for p in popularity_ranges])
+
+    # Iterate over the popularity ranges and create the facets
+    for i, popularity_range in enumerate(popularity_ranges):
+        facet_data = data[data['popularity'].isin(popularity_range)]
+
+        # Calculate average feature values for each year range in the facet
+        feature_avg_values = []
+        for start_year, end_year in year_ranges:
+            avg_value = facet_data[(facet_data['year'] >= start_year) & (facet_data['year'] <= end_year)][feature_dropdown].mean()
+            feature_avg_values.append(avg_value)
+
+        # Normalize the feature average values between 0 and 1
+        min_value = min(feature_avg_values)
+        max_value = max(feature_avg_values)
+        if min_value != max_value:
+            normalized_values = (feature_avg_values - min_value) / (max_value - min_value)
+        else:
+            normalized_values = feature_avg_values
+
+        # Create the bar chart for the facet
+        for j, (start_year, end_year) in enumerate(year_ranges):
+            fig.add_trace(go.Bar(
+                x=normalized_values[j],
+                y=[f"{start_year}-{end_year}"],
+                orientation='h',
+                marker=dict(
+                    color='rgb(63, 81, 181)',
+                    line=dict(
+                        color='rgb(40, 55, 71)',
+                        width=1.5
+                    )
+                ),
+                opacity=0.8,
+                showlegend=False
+            ), row=i+1, col=1)
+
+    fig.update_layout(
+        yaxis_title='Year Range',
+        xaxis_title='Average Normalized Value',
+        title={
+            'text': f"Average Feature Values by Year Range for {feature_dropdown}",
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        yaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'
+        ),
+        xaxis=dict(
+            tickfont=dict(size=10),
+            gridcolor='rgb(238, 238, 238)'
+        ),
+        width=800,
+        height=600
+    )
+
+    st.plotly_chart(fig)
 # def second_vis_alt(data):
 #     # Preprocess the data
 #     data = data.copy()
@@ -560,6 +639,7 @@ st.write("Explore the factors that shape a song's popularity. By selecting diffe
 st.write(" A positive SHAP value suggests that as a feature's value increases, it tends to increase the song's popularity. On the other hand, a negative SHAP value indicates that as a feature's value increases, it may have a diminishing effect on the song's popularity.For instance, take the feature 'duration_ms'  that is shown below as an example. As the duration of the song increases, it may have a negative impact on the song's popularity. ")
 second_vis(data)
 second_vis_alt(data)
+second_vis_alt_alt(data)
 second_vis_alt1(data)
 st.header('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the popularity level, where higher values indicate greater popularity.")
