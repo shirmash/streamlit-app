@@ -244,11 +244,7 @@ def second_vis_alt(data):
     )
 
     # Display the graph using st.plotly_chart
-    st.plotly_chart(fig)
-
-# Example usage
-data = pd.read_csv("your_data.csv")
-second_vis_alt(data)      
+    st.plotly_chart(fig)    
 
 #     Display the graph using st.plotl
 # def second_vis_alt(data):
