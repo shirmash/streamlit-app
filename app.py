@@ -186,7 +186,7 @@ def second_vis_alt(data):
     feature_dropdown = st.selectbox("Feature:", feature_names)
 
     # Create a figure with subplots for each facet
-    fig = make_subplots(rows=1, cols=len(year_ranges), subplot_titles=[f"{start}-{end}" for start, end in year_ranges])
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[f"{start}-{end}" for start, end in year_ranges])
 
     # Iterate over the year ranges and create the facets
     for i, (start_year, end_year) in enumerate(year_ranges):
