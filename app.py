@@ -31,11 +31,11 @@ def first_vis(data):
                          range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9,0,-1)]  
     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
     def map_to_range(value):
-    for i, rng in enumerate(popularity_ranges):
-      if value == 0:
-        return f"{0}-{8}"
-      elif value in rng:         
-        return f"{rng.stop}-{rng.start-1}"
+        for i, rng in enumerate(popularity_ranges):
+          if value == 0:
+            return f"{0}-{8}"
+          elif value in rng:         
+            return f"{rng.stop}-{rng.start-1}"
             
     songs_normalize['PopularityRange'] = songs_normalize['popularity'].apply(map_to_range)
     # Get the columns names and save only the relevant ones
