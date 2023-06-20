@@ -47,7 +47,7 @@ def first_vis(data):
     lines = []
     for column in avg_popularity.columns:
         if column != 'year':
-            line = go.Scatter(x=avg_popularity[column], y=avg_popularity['popularity'], name=column)
+            line = go.Scatter(x=avg_popularity['avrage_value'], y=avg_popularity[column], name=column)
             lines.append(line)
 
     # Create the layout with checklist dropdown
