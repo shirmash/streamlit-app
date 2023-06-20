@@ -17,46 +17,81 @@ st.set_page_config(layout="wide",page_title="Spotify Music Insights")
 
 st.title('Visualization: Final Project')
 
-# Load the data
-data = pd.read_csv('songs_normalize.csv')
-map_data= pd.read_csv('map_data.csv')
 def first_vis(data):
-    songs_popular = data.copy()
+    data = data.copy()
+    data = data.drop(['explicit', 'genre'], axis=1)
 
-    # Filter songs by popularity range
-    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=100, value=(0, 100))
-    songs_popular = songs_popular[(songs_popular['popularity'] >= popularity_range[0]) & (songs_popular['popularity'] <= popularity_range[1])]
-
-    # Get the available features
-    features = list(songs_popular.columns)
-
-    # Select the feature using a dropdown
-    selected_feature = st.selectbox('Select Feature', features)
-
-    # Normalize the selected feature
-    feature_values = songs_popular[selected_feature].values.reshape(-1, 1)
     scaler = MinMaxScaler()
-    normalized_values = scaler.fit_transform(feature_values)
+    data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
 
-    # Filter the normalized values based on the selected range
-    range_values = st.slider('Select Range for Normalized Values', min_value=0.0, max_value=1.0, value=(0.0, 1.0))
-    filtered_values = normalized_values[(normalized_values >= range_values[0]) & (normalized_values <= range_values[1])]
+    # Get the column names and save only the relevant ones
+    column_names = list(data.columns.values)
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_names = [item for item in column_names if item not in features_to_remove]
 
-    # Get the corresponding popularity values
-    popularity_values = songs_popular.loc[(normalized_values >= range_values[0]) & (normalized_values <= range_values[1]), 'popularity']
+    # Convert non-numeric columns to numeric
+    non_numeric_columns = data.select_dtypes(exclude=np.number).columns
+    data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    # Create the scatter plot
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=filtered_values.flatten(), y=popularity_values, mode='markers'))
+    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
+    avg_popularity[features_names] = avg_popularity[features_names].round(2)
 
-    # Set the layout
-    fig.update_layout(
-        title='Popularity vs Normalized Value',
+    # Continue with the rest of the code for visualization
+    lines = []
+    for column in avg_popularity.columns:
+        if column != 'year':
+            line = go.Scatter(x=avg_popularity[column], y=avg_popularity['popularity'], name=column)
+            lines.append(line)
+
+    # Create the layout with checklist dropdown
+    layout = go.Layout(
+        title='Average Feature Value per Year',
+        title_x=0.3,
+        title_y=0.9,
         xaxis_title='Normalized Value',
-        yaxis_title='Popularity'
+        yaxis_title='Popularity',
+        legend=dict(
+            title='Choose Feature',
+            title_font=dict(size=18),
+        ),
+        annotations=[
+            dict(
+                x=1.16,
+                y=0.31,
+                xref='paper',
+                yref='paper',
+                text='One click to remove the feature',
+                showarrow=False,
+                font=dict(size=10),
+            )
+        ],
+        updatemenus=[
+            dict(
+                buttons=list([
+                    dict(
+                        label=column,
+                        method='update',
+                        args=[{'visible': [col == column for col in avg_popularity.columns]}, {'title': f'Average {column} Value per Year'}]
+                    ) for column in avg_popularity.columns if column != 'year'
+                ]),
+                direction='down',
+                showactive=True,
+                x=1.1,
+                xanchor='right',
+                y=1.15,
+                yanchor='top'
+            )
+        ]
     )
 
-    # Show the plot
+    # Create the figure
+    fig = go.Figure(data=lines, layout=layout)
+    fig.update_layout(
+        width=1000,
+        height=600,
+    )
+
+    # Display the figure
     st.plotly_chart(fig)
 # def first_vis(data):
 #     songs_popular = data.copy()
