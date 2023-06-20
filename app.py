@@ -95,32 +95,32 @@ def first_vis(data):
         
 def first_vis_alt(data):
     songs_normalize = data.copy()
-    songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
+    songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
     songs_normalize.sort_values('popularity', inplace=True)
     scaler = MinMaxScaler()
-    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
-    
+    songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'genre', 'popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'genre', 'popularity'])])
+
     # Get the feature names
     column_names = list(songs_normalize.columns.values)
-    features_to_remove = ['song', 'artist','genre', 'year']
+    features_to_remove = ['song', 'artist', 'genre', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
 
     # Select feature using Streamlit
     select_feature = st.selectbox('Choose feature 1:', features_names)
 
-    fig = px.scatter(songs_normalize, x='popularity', y=select_feature, title=f'{select_feature} by Popularity', width=900, height=500)
-    
+    fig = px.scatter(songs_normalize, x='year', y='popularity', color=select_feature, title=f'Popularity by Year and {select_feature}', width=900, height=500)
+
     # Update the layout
     fig.update_layout(
-        xaxis_title='Popularity',
-        yaxis_title='Feature Values',
+        xaxis_title='Year',
+        yaxis_title='Popularity',
         title_x=0.5,  # Set the title position to the center
-        showlegend=False   
+        showlegend=True
     )
-    
+
     # Create the figure
     fig.update_traces(marker=dict(size=5))
-    
+
     # Display the figure
     col1, col2 = st.columns([1, 16])
     with col1:
