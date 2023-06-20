@@ -318,7 +318,6 @@ def map_vis(map_data):
     fig = px.choropleth(avg_popularity, locations='Country', locationmode='country names',
                         color='popularity', color_continuous_scale='RdYlBu',
                         labels={'value': 'Average Popularity'}, title='Average Popularity by Country', projection="natural earth")
-
     # Display the graph
     fig.update_layout(
         coloraxis_colorbar=dict(title='Average Popularity'),
@@ -331,7 +330,6 @@ def map_vis(map_data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-    st.plotly_chart(fig)
 
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
