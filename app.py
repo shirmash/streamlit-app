@@ -52,10 +52,17 @@ def first_vis(data):
     # Add a new column for the categorical color based on year range
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
 
-# Update the scatter plot to use the categorical color
+      # Update the scatter plot to use the categorical color
     fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year_range',
-                 title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
-                 color_discrete_sequence=colors, category_orders={'year_range': [f'{start}-{end}' for (start, end) in year_ranges]})
+                     title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
+                     color_discrete_sequence=colors, category_orders={'year_range': [f'{start}-{end}' for (start, end) in year_ranges]})
+    
+    # Customize the legend
+    fig.update_traces(showlegend=True)
+    fig.update_layout(legend_title_text='Year Range')
+    
+    # Enable interactive legend filtering
+    fig.update_layout(legend=dict(itemclick="toggleothers"))
 
 # Customize the legend
     fig.update_traces(showlegend=True)
