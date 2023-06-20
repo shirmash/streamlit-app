@@ -23,11 +23,11 @@ def first_vis(data):
     data = data.drop(['explicit', 'genre'], axis=1)
 
     scaler = MinMaxScaler()
-    data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
-        data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
+    data[data.columns.difference(['artist', 'song', 'year', 'explicit','mode'])] = scaler.fit_transform(
+        data[data.columns.difference(['artist', 'song', 'year', 'explicit','mode'])])
 
     column_names = list(data.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity','mode']
     features_names = [item for item in column_names if item not in features_to_remove]
 
     non_numeric_columns = data.select_dtypes(include=['object']).columns
