@@ -265,7 +265,7 @@ def third_vis(data):
     avg_popularity_genre = df_songs_genres.groupby(['year', 'genre'])['popularity'].mean().reset_index()
     avg_popularity_genre = avg_popularity_genre.pivot(index='year', columns='genre', values='popularity')
 
-    # Create the bars for the plot
+     # Create the bars for the plot
     bars = []
     genres = []
     for column in avg_popularity_genre.columns:
@@ -274,38 +274,38 @@ def third_vis(data):
                 x=avg_popularity_genre.index,
                 y=avg_popularity_genre[column],
                 name=column,
-                marker=dict(color='orange')
+                marker=dict(color='orange', line=dict(color='black', width=1))
             )
             bars.append(bar)
             genres.append(column)
 
-    # Create the initial selectbox
-    select_genre = st.selectbox('Choose genre:', genres)
-
     layout = go.Layout(
+        title='Popularity of Different Genres Over the Years',
         barmode='stack',  # Set the barmode to 'stack' for stacked bars
+        title_x=0.35,  # Set the title position to the center
+        title_y=0.9,  # Set the title position to the upper part
         xaxis_title='Year',
         yaxis_title='Average Popularity',
         showlegend=False,
     )
+
+    # Create the initial selectbox
+    select_genre = st.selectbox('Choose genre:', genres)
+
+    # Set the visibility of the bars based on the selected genre
+    visible_column = [column == select_genre for column in genres]
+    for bar, visibility in zip(bars, visible_column):
+        bar.visible = visibility
 
     # Create the figure
     fig = go.Figure(data=bars, layout=layout)
     fig.update_layout(
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
-        title={
-            'text': f"Popularity of the genre {select_genre} Over the Years",
-            'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.85  # Set the title position slightly below the top vertically
-        }
     )
 
-    selected_index = genres.index(select_genre)
-    fig.update_traces(visible=True, selector=dict(name=bars[selected_index].name))
-
     # Display the figure in Streamlit
-    col1, col2 = st.columns([1, 16])
+    col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
     with col2:
