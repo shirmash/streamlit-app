@@ -65,28 +65,30 @@ def first_vis(data):
             name=range_label
         )
         traces.append(trace)
-        layout = go.Layout(
-        title=f"{selected_feature} popularity",
-        xaxis_title=selected_feature,
-        yaxis_title='Popularity',
-        showlegend=True,
-        legend=dict(title='Year Range'),
-        annotations=[
-            dict(
-                x=1.08,
-                y=0.65,
-                xref="paper",
-                yref="paper",
-                xanchor="center",
-                yanchor="bottom",
-                text="One click to remove",
-                showarrow=False,
-                font=dict(size=12) )] )
-    fig = go.Figure(data=traces, layout=layout)
-    fig.update_layout(     
-        width=900,  # Set the width of the chart
-        height=500,  # Set the height of the chart
-    )
+    layout = go.Layout(
+    title={
+    'text': f"{selected_feature} Impact on Songs' Popularity",
+    'x': 0.5,
+    'y': 0.9,
+    'xanchor': 'center',
+    'yanchor': 'top'
+    },
+    xaxis_title=selected_feature,
+    yaxis_title='Popularity',
+    showlegend=True,
+    legend=dict(title='Year Range'),
+    annotations=[
+    dict(
+        x=1.08,
+        y=0.65,
+        xref="paper",
+        yref="paper",
+        xanchor="center",
+        yanchor="bottom",
+        text="One click to remove",
+        showarrow=False,
+        font=dict(size=12)
+    )])
     col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
