@@ -99,14 +99,19 @@ def first_vis_alt(data):
 
     scaler = MinMaxScaler()
     songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
+    
+    # Filter songs by popularity over 50
+    songs_popular = songs_normalize[songs_normalize['popularity'] > 60]
+    
     # Get the columns names and save only the relevant ones
-    column_names = list(songs_normalize.columns.values)
+    column_names = list(songs_popular.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
+    
     # Convert non-numeric columns to numeric
-    non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
-    songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-    avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
+    non_numeric_columns = songs_popular.select_dtypes(exclude=np.number).columns
+    songs_popular[non_numeric_columns] = songs_popular[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+    avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
 
     # Create the lines for the plot
     lines = []
@@ -115,12 +120,9 @@ def first_vis_alt(data):
             line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
             lines.append(line)
 
-    # Filter songs based on popularity
-    popular_songs = songs_normalize[songs_normalize['popularity'] > 50]
-
-    # Create a scatter trace for song popularity
-    fig = px.scatter(popular_songs, x='year', y='popularity', color='popularity', size='popularity', title='Feature by Popularity', width=900, height=500, color_continuous_scale='Viridis', range_color=[0, 100])
-
+    # Create a scatter plot with normalized feature values and colored by popularity
+    fig = px.scatter(songs_popular, x='year', y=selected_feature, color='popularity', title='Feature by Popularity', width=900, height=500, color_continuous_scale='Viridis', range_color=[0, 100], facet_col='year_range', facet_col_wrap=2, labels={'popularity': 'Popularity'})
+    
     # Add reference lines and traces to the figure
     for line in lines:
         fig.add_trace(line)
@@ -128,7 +130,7 @@ def first_vis_alt(data):
     # Update the layout
     fig.update_layout(
         xaxis_title='Year',
-        yaxis_title='Popularity',
+        yaxis_title=f'Normalized {selected_feature.capitalize()}',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
