@@ -92,7 +92,45 @@ def first_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
+        
+def first_vis_alt(data):
+    songs_normalize = data.copy()
+    songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
+    songs_normalize.sort_values('popularity', inplace=True)
+    scaler = MinMaxScaler()
+    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
 
+    def map_to_range(value):
+        return str(value)
+            
+    songs_normalize['PopularityRange'] = songs_normalize['popularity'].apply(map_to_range)
+    # Get the columns names and save only the relevant ones
+    songs_normalize = songs_normalize.drop('popularity', axis=1)
+    
+    # Get the feature names
+    column_names = list(songs_normalize.columns.values)
+    features_to_remove = ['song', 'artist','genre', 'year','PopularityRange']
+    features_names = [item for item in column_names if item not in features_to_remove]
+
+    fig = px.scatter(songs_normalize, x='PopularityRange', y=select_feature, title=f'{select_feature} by Popularity', width=900, height=500)
+    
+    # Update the layout
+    fig.update_layout(
+        xaxis_title='Popularity',
+        yaxis_title='Feature Values',
+        title_x=0.5,  # Set the title position to the center
+        showlegend=False   
+    )
+    
+    # Create the figure
+    fig.update_traces(marker=dict(size=5))
+    
+    # Display the figure
+    col1, col2 = st.columns([1, 16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
 
 def second_vis(data):
     # Preprocess the data
@@ -345,6 +383,7 @@ st.header('What are the trends and patterns in popular music from 2000 to 2019, 
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
 first_vis(data)
+first_vis_alt(data)
 st.header('What are the characteristics that have the strongest influence on the popularity of a song? ')
 st.write("Explore the factors that shape a song's popularity. By selecting different features from the dropdown menu, you can observe how various characteristics influence a song's popularity.")
 st.write(" A positive SHAP value suggests that as a feature's value increases, it tends to increase the song's popularity. On the other hand, a negative SHAP value indicates that as a feature's value increases, it may have a diminishing effect on the song's popularity.For instance, take the feature 'duration_ms'  that is shown below as an example. As the duration of the song increases, it may have a negative impact on the song's popularity. ")
