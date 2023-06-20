@@ -100,17 +100,14 @@ def second_vis(map_data):
 def third_vis(data):
     # Drop rows with missing genre values
     data.dropna(subset=['genre'], inplace=True)
-    
     # Split multiple genres into a list
     data['genre'] = data['genre'].str.split(',')
-    
     # Remove leading/trailing whitespace from each genre
     data['genre'] = data['genre'].apply(lambda genres: [genre.strip() for genre in genres])
     df_songs_genres = pd.DataFrame.from_records(data, columns=['year', 'popularity', 'genre'])
     df_songs_genres = df_songs_genres.explode('genre').reset_index(drop=True)
     avg_popularity_genre = df_songs_genres.groupby(['year', 'genre'])['popularity'].mean().reset_index()
     avg_popularity_genre = avg_popularity_genre.pivot(index='year', columns='genre', values='popularity')
-
      # Create the bars for the plot
     bars = []
     genres = []
@@ -120,25 +117,21 @@ def third_vis(data):
                 x=avg_popularity_genre.index,
                 y=avg_popularity_genre[column],
                 name=column,
-                marker=dict(color='orange', line=dict(color='black', width=1))
+                marker=dict(color='red', line=dict(color='black', width=1))
             )
             bars.append(bar)
             genres.append(column)
-
-    # Create the initial selectbox
+    # Create the selectbox
     select_genre = st.selectbox('Choose genre:', genres)
-
     # Set the visibility of the bars based on the selected genre
     visible_column = [column == select_genre for column in genres]
     for bar, visibility in zip(bars, visible_column):
         bar.visible = visibility
-        
     layout = go.Layout(
         barmode='stack',  # Set the barmode to 'stack' for stacked bars
         xaxis_title='Year',
         yaxis_title='Average Popularity',
-        showlegend=False,
-    )    
+        showlegend=False,)    
     fig = go.Figure(data=bars, layout=layout)
     fig.update_layout(
         width=900,  # Set the width of the chart
@@ -146,14 +139,7 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.85  # Set the title position slightly below the top vertically
-        }
-    )
-    fig.update_layout(
-        width=900,  # Set the width of the chart
-        height=500,  # Set the height of the chart
-    )
-
+            'y': 0.85  # Set the title position slightly below the top vertically} )
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
     with col1:
