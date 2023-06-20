@@ -310,6 +310,7 @@ def third_vis(data):
     with col2:
         st.plotly_chart(fig)
         
+
 def map_vis(map_data):
     avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
@@ -324,12 +325,15 @@ def map_vis(map_data):
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
+    
     # Display the figure in Streamlit
-    col1, col2 = st.columns([1,16])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col1:
         st.write("")
     with col2:
         st.plotly_chart(fig)
+    with col3:
+        st.write("")
 
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
