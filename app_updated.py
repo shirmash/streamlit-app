@@ -404,6 +404,78 @@ def second_vis_alt1(data):
     with col2:
         st.plotly_chart(fig)
         
+def first_vis(data):
+    songs_normalize = data.copy()
+    songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
+    songs_normalize.sort_values('popularity', inplace=True)
+    scaler = MinMaxScaler()
+    songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
+
+    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
+                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9,0,-1)]  
+    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
+    def map_to_range(value):
+        for i, rng in enumerate(popularity_ranges):
+          if value == 0:
+            return f"{0}-{8}"
+          elif value in rng:         
+            return f"{rng.stop}-{rng.start-1}"
+            
+    songs_normalize['PopularityRange'] = songs_normalize['popularity'].apply(map_to_range)
+    # Get the columns names and save only the relevant ones
+    songs_normalize = songs_normalize.drop('popularity', axis=1)
+    
+    #get the columns names and save only the relevents
+    column_names = list(songs_normalize.columns.values)
+    features_to_remove = ['song', 'artist','genre', 'year','PopularityRange']
+    features_names = [item for item in column_names if item not in features_to_remove]
+
+    fig = go.Figure()
+    # Create the boxes for the plot
+    boxes = []
+    for column in features_names:
+      fig.add_trace(go.Box(y=songs_normalize[column], x=songs_normalize['PopularityRange'], name=column))
+  
+    # # Create dropdown menu options
+    # dropdown_options = []
+    # for i, feature in enumerate(features_names):
+    #     visibility = [i == j for j in range(len(features_names))]
+    #     dropdown_options.append({'label': feature, 'method': 'update', 'args': [{'visible': visibility}, {'title': f'{feature} by Popularity Ranges'}]})
+
+    select_feature = st.selectbox('Choose feature:', features_names)
+
+    # Set the visibility of the bars based on the selected genre
+    visible_column = [column == select_feature for column in features_names]
+    for box, visibility in zip(fig.data, visible_column):
+        box.visible = visibility
+    
+    # Update the layout
+    fig.update_layout(
+         title={
+            'text': f"{select_feature} by Popularity Ranges",
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        xaxis_title='Popularity Ranges',
+        yaxis_title='Feature Values',
+        title_x=0.35,  # Set the title position to the center
+        title_y=0.9,  # Set the title position to the upper part
+        showlegend=False   
+    )
+    
+    # Create the figure    
+    fig.update_traces(line=dict(width=2.5))
+    fig.update_layout(
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
+    )
+    # Display the figure
+    col1, col2 = st.columns([1, 16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
+        
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
