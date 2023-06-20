@@ -41,7 +41,8 @@ def first_vis(data):
     x_min, x_max = st.slider("Select x-range", 0.0, 1.0, (0.0, 1.0), step=0.01)
 
     # Filter data based on x-range
-    filtered_data = avg_popularity[(avg_popularity['avrage_value'] >= x_min) & (avg_popularity['avrage_value'] <= x_max)]
+    filtered_data = avg_popularity[(avg_popularity['average_value'] >= x_min) & (avg_popularity['average_value'] <= x_max)]
+
 
     # Create scatter plot
     fig = go.Figure()
