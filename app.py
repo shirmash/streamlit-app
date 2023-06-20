@@ -23,9 +23,9 @@ def first_vis(data):
     range_data = range_data.drop(['explicit', 'genre'], axis=1)
     # Scale the data
     scaler = MinMaxScaler()
-    range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])] = scaler.fit_transform(range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
+    range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode','key'])] = scaler.fit_transform(range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
     column_names = list(range_data.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity', 'mode']
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity', 'mode','key']
     features_names = [item for item in column_names if item not in features_to_remove]
     non_numeric_columns = range_data.select_dtypes(include=['object']).columns
     range_data[non_numeric_columns] = range_data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
@@ -109,15 +109,16 @@ def third_vis(data):
     bars = []
     genres = []
     for column in avg_popularity_genre.columns:
-        if column != 'set()':
-            bar = go.Bar(
-                x=avg_popularity_genre.index,
-                y=avg_popularity_genre[column],
-                name=column,
-                marker=dict(color='orange', line=dict(color='black', width=1))
-            )
-            bars.append(bar)
-            genres.append(column)
+        if column != 'classical' and column != 'jazz':
+            if column != 'set()':
+                bar = go.Bar(
+                    x=avg_popularity_genre.index,
+                    y=avg_popularity_genre[column],
+                    name=column,
+                    marker=dict(color='orange', line=dict(color='black', width=1))
+                )
+                bars.append(bar)
+                genres.append(column)
     # Create the selectbox
     select_genre = st.selectbox('Choose genre:', genres)
     # Set the visibility of the bars based on the selected genre
