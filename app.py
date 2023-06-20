@@ -93,6 +93,7 @@ def first_vis(data):
     with col2:
         st.plotly_chart(fig)
 
+
 def first_vis_alt(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
@@ -170,12 +171,14 @@ def first_vis_alt(data):
         width=1000,  # Set the width of the chart
         height=600,  # Set the height of the chart
     )
+    
     # Display the figure
     col1, col2 = st.columns([1, 7])
     with col1:
         st.write("")
     with col2:
         st.plotly_chart(fig)
+        
 def second_vis_alt(data):
     # Preprocess the data
     data = data.copy()
