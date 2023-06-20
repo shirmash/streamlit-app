@@ -96,39 +96,6 @@ def first_vis(data):
 def first_vis_alt(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
-    songs_normalize.sort_values('popularity', inplace=True)
-    scaler = MinMaxScaler()
-    songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'genre', 'popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'genre', 'popularity'])])
-
-    # Get the feature names
-    column_names = list(songs_normalize.columns.values)
-    features_to_remove = ['song', 'artist', 'genre', 'popularity']
-    features_names = [item for item in column_names if item not in features_to_remove]
-
-    # Select feature using Streamlit
-    select_feature = st.selectbox('Choose feature :', features_names)
-
-    year_ranges = [(1998, 2003), (2004, 2009), (2010, 2015), (2016, 2020)]
-
-    fig = make_subplots(rows=2, cols=2, subplot_titles=[f'{range[0]}-{range[1]}' for range in year_ranges])
-
-    for i, range in enumerate(year_ranges):
-        range_df = songs_normalize[(songs_normalize['year'] >= range[0]) & (songs_normalize['year'] <= range[1])]
-        fig.add_trace(go.Scatter(x=range_df[select_feature], y=range_df['popularity'], mode='markers', name=f'{range[0]}-{range[1]}'), row=(i // 2) + 1, col=(i % 2) + 1)
-
-    fig.update_layout(title=f'Popularity by {select_feature} and Year', width=900, height=900)
-
-    # Update the layout
-    fig.update_xaxes(title_text=select_feature, row=1, col=1)
-    fig.update_xaxes(title_text=select_feature, row=1, col=2)
-    fig.update_yaxes(title_text='Popularity', row=1, col=1)
-    fig.update_yaxes(title_text='Popularity', row=2, col=1)
-
-    # Display the figure
-    st.plotly_chart(fig)
-def first_vis_alt(data):
-    songs_normalize = data.copy()
-    songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
 
     scaler = MinMaxScaler()
     songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
@@ -156,8 +123,7 @@ def first_vis_alt(data):
         reference_lines.append(reference_line)
 
     # Create a scatter trace for song popularity
-    popularity_trace = go.Scatter(x=songs_normalize['year'], y=songs_normalize['popularity'], name='Popularity', mode='markers',
-                                  marker=dict(size=songs_normalize['popularity'], color=songs_normalize['popularity'], showscale=True, colorscale='Viridis'))
+    popularity_trace = go.Scatter(x=songs_normalize['year'], y=songs_normalize['popularity'], name='Popularity', mode='markers', marker=dict(size=8, color='black'))
 
     # Create the layout with checklist dropdown
     layout = go.Layout(
@@ -200,11 +166,8 @@ def first_vis_alt(data):
         ]
     )
 
-    # Combine all traces
-    data = lines + reference_lines + [popularity_trace]
-
     # Create the figure
-    fig = go.Figure(data=data, layout=layout)
+    fig = go.Figure(data=lines + reference_lines + [popularity_trace], layout=layout)
     fig.update_layout(
         width=1000,  # Set the width of the chart
         height=600,  # Set the height of the chart
