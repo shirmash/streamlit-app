@@ -53,8 +53,7 @@ def first_vis(data):
             y=rounded_popularity,
             mode='markers',
             marker=dict(color=colors[range_index]),
-            text=data['song'].astype(str) + ' - ' + data['artist'].astype(str),  # Set the text for hover tooltip
-            name=range_label  # Set the legend label as the year range)
+            text=data['song'].astype(str) + ' - ' + data['artist'].astype(str), name=range_label )
             traces.append(trace)
             legend_labels.append(range_label)
     layout = go.Layout(
