@@ -20,7 +20,7 @@ st.title('Visualization: Final Project')
 
 # Load the data
 data = pd.read_csv('songs_normalize.csv')
-artists= pd.read_csv('artists.csv')
+map_data= pd.read_csv('map_data.csv')
 def first_vis(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
@@ -310,8 +310,8 @@ def third_vis(data):
     with col2:
         st.plotly_chart(fig)
         
-def map_vis(songs_normalize, data):
-    avg_popularity = songs_normalize.groupby(['Country'])['popularity'].mean().reset_index()
+def map_vis(map_data):
+    avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
 
     # Create the choropleth map using plotly express
@@ -333,7 +333,7 @@ st.write("Explore the factors that shape a song's popularity. By selecting diffe
 st.write(" A positive SHAP value suggests that as a feature's value increases, it tends to increase the song's popularity. On the other hand, a negative SHAP value indicates that as a feature's value increases, it may have a diminishing effect on the song's popularity.For instance, take the feature 'duration_ms'  that is shown below as an example. As the duration of the song increases, it may have a negative impact on the song's popularity. ")
 second_vis(data)
 second_vis_alt(data)
-map_vis(data,artists)
+map_vis(map_data)
 st.header('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the popularity level, where higher values indicate greater popularity.")
 third_vis(data)
