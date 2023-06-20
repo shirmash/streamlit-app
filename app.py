@@ -274,7 +274,7 @@ def third_vis(data):
                 x=avg_popularity_genre.index,
                 y=avg_popularity_genre[column],
                 name=column,
-                marker=dict(color='orange', line=dict(color='black', width=1))
+                marker=dict(color='orange')
             )
             bars.append(bar)
             genres.append(column)
@@ -297,7 +297,7 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.5,  # Set the title position to the middle horizontally
-            'y': 0.95  # Set the title position slightly below the top vertically
+            'y': 0.7# Set the title position slightly below the top vertically
         }
     )
 
