@@ -42,15 +42,18 @@ def first_vis(data):
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
+
         # Create a scatter trace for each year range
         trace = go.Scatter(
             x=range_data[selected_feature],
             y=range_data['popularity'],
             mode='markers',
             marker=dict(color=colors[range_index]),
-            name=range_label
+            name=range_label,
+            text=range_data['song'] + ' - ' + range_data['artist']  # Set the text for hover tooltip
         )
-        traces.append(trace)
+
+    traces.append(trace)
     layout = go.Layout(
     title={
     'text': f"{selected_feature} Impact On Songs Popularity",
