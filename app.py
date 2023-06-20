@@ -274,7 +274,7 @@ def third_vis(data):
                 x=avg_popularity_genre.index,
                 y=avg_popularity_genre[column],
                 name=column,
-               marker=dict(color='orange' )
+               marker=dict(color='orange'))
             bars.append(bar)
             genres.append(column)
 
