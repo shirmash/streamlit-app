@@ -253,19 +253,17 @@ def second_vis_alt(data):
     st.plotly_chart(fig)
 
 def third_vis(data):
-    data = data.copy()
     # Drop rows with missing genre values
     data.dropna(subset=['genre'], inplace=True)
-
+    
     # Split multiple genres into a list
     data['genre'] = data['genre'].str.split(',')
-
+    
     # Remove leading/trailing whitespace from each genre
     data['genre'] = data['genre'].apply(lambda genres: [genre.strip() for genre in genres])
-
-    # Keep only the first genre for each song
-    data['genre'] = data['genre'].apply(lambda genres: genres[0])
-    avg_popularity_genre = data.groupby(['year', 'genre'])['popularity'].mean().reset_index()
+    df_songs_genres = pd.DataFrame.from_records(data, columns=['year','popularity','genre'])
+    df_songs_genres = df_songs_genres.explode('genre').reset_index(drop=True)
+    avg_popularity_genre = df_songs_genres.groupby(['year','genre'])['popularity'].mean().reset_index()
     avg_popularity_genre = avg_popularity_genre.pivot(index='year', columns='genre', values='popularity')
 
     # Create the bars for the plot
