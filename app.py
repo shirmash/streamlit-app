@@ -54,7 +54,7 @@ def first_vis(data):
     layout = go.Layout(
     title={
     'text': f"{selected_feature} Impact On Songs Popularity",
-    'x': 0.5,
+    'x': 0.4,
     'y': 0.9,
     'xanchor': 'center',
     'yanchor': 'top'
