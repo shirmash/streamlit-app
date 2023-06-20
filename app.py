@@ -251,7 +251,6 @@ def second_vis_alt(data):
     )
 
     st.plotly_chart(fig)
-
 def third_vis(data):
     # Drop rows with missing genre values
     data.dropna(subset=['genre'], inplace=True)
@@ -280,35 +279,35 @@ def third_vis(data):
             bars.append(bar)
             genres.append(column)
 
-    layout = go.Layout(
-    title='Popularity of Different Genres Over the Years',
-    barmode='stack',  # Set the barmode to 'stack' for stacked bars
-    title_x=0.5,  # Set the title position to the middle horizontally
-    title_y=1,  # Set the title position to the top vertically
-    xaxis_title='Year',
-    yaxis_title='Average Popularity',
-    showlegend=False,
-)
     # Create the initial selectbox
     select_genre = st.selectbox('Choose genre:', genres)
 
-    # Set the visibility of the bars based on the selected genre
-    visible_column = [column == select_genre for column in genres]
-    for bar, visibility in zip(bars, visible_column):
-        bar.visible = visibility
+    layout = go.Layout(
+        barmode='stack',  # Set the barmode to 'stack' for stacked bars
+        xaxis_title='Year',
+        yaxis_title='Average Popularity',
+        showlegend=False,
+    )
 
     # Create the figure
     fig = go.Figure(data=bars, layout=layout)
     fig.update_layout(
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
+        title={
+            'text': f"Popularity of the genre {select_genre} Over the Years",
+            'x': 0.5,  # Set the title position to the middle horizontally
+            'y': 0.95  # Set the title position slightly below the top vertically
+        }
     )
-    
-    # Update the title based on the selected genre
-    fig.update_layout(title=f'Popularity of the genre {select_genre} Over the Years')
+
+    # Set the visibility of the bars based on the selected genre
+    visible_column = [column == select_genre for column in genres]
+    for bar, visibility in zip(bars, visible_column):
+        bar.visible = visibility
 
     # Display the figure in Streamlit
-    col1, col2 = st.columns([1,16])
+    col1, col2 = st.columns([1, 16])
     with col1:
         st.write("")
     with col2:
