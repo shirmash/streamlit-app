@@ -31,7 +31,7 @@ def first_vis(data):
     range_data[non_numeric_columns] = range_data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
     selected_feature = st.selectbox("Select Feature:", features_names)  # dropdown
-    x_min, x_max = st.slider('select feature range:', 0, 1, (0, 1))
+    x_min, x_max = st.slider('select feature range:', 0.0, 1.0, (0.0, 1.0))
     year_ranges = [(1999, 2004), (2005, 2010), (2011, 2015), (2016, 2020)]
     colors = ['#d62728', '#F9564F', '#2ca02c', '#98df8a']  # colors for the year ranges
     # Create a dictionary mapping year ranges to colors
