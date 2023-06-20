@@ -92,7 +92,7 @@ def first_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-        
+
 def first_vis_alt(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
@@ -100,10 +100,13 @@ def first_vis_alt(data):
     scaler = MinMaxScaler()
     songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
     
-    # Filter songs by popularity over 50
-    songs_popular = songs_normalize[songs_normalize['popularity'] > 60]
+    # Create a slider for selecting the popularity range
+    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(50, 89))
     
-    # Get the columns names and save only the relevant ones
+    # Filter songs by popularity range
+    songs_popular = songs_normalize[(songs_normalize['popularity'] >= popularity_range[0]) & (songs_normalize['popularity'] <= popularity_range[1])]
+    
+    # Get the column names and save only the relevant ones
     column_names = list(songs_popular.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
@@ -120,17 +123,13 @@ def first_vis_alt(data):
             line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
             lines.append(line)
 
-    # Create a scatter plot with normalized feature values and colored by popularity
-    fig = px.scatter(songs_popular, x='year', y=selected_feature, color='popularity', title='Feature by Popularity', width=900, height=500, color_continuous_scale='Viridis', range_color=[0, 100], facet_col='year_range', facet_col_wrap=2, labels={'popularity': 'Popularity'})
-    
-    # Add reference lines and traces to the figure
-    for line in lines:
-        fig.add_trace(line)
-
-    # Update the layout
-    fig.update_layout(
+    # Create the layout with checklist dropdown
+    layout = go.Layout(
+        title='Average Feature Value per Year',
+        title_x=0.3,  # Set the title position to the center
+        title_y=0.9,  # Set the title position to the upper part
         xaxis_title='Year',
-        yaxis_title=f'Normalized {selected_feature.capitalize()}',
+        yaxis_title='Average Normalized Value',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
@@ -152,10 +151,10 @@ def first_vis_alt(data):
                     dict(
                         label='All',
                         method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Feature by Popularity'}]
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
                     )
                 ]),
-                direction='down',  # the position of the dropdown
+                direction='down', # the position of the dropdown
                 showactive=True,
                 x=1.1,
                 xanchor='right',
@@ -165,6 +164,12 @@ def first_vis_alt(data):
         ]
     )
 
+    # Create the figure
+    fig = go.Figure(data=lines, layout=layout)
+    fig.update_layout(
+        width=1000,  # Set the width of the chart
+        height=600,  # Set the height of the chart
+    )
     # Display the figure
     col1, col2 = st.columns([1, 7])
     with col1:
