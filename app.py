@@ -115,23 +115,20 @@ def first_vis_alt(data):
             line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
             lines.append(line)
 
-    # Create reference lines for popular songs
-    popular_songs = songs_normalize[songs_normalize['popularity'] > 80]
-    reference_lines = []
-    for _, song in popular_songs.iterrows():
-        reference_line = go.Scatter(x=[song['year'], song['year']], y=[0, 1], name='Popular Song', mode='lines', line=dict(dash='dash'))
-        reference_lines.append(reference_line)
+    # Filter songs based on popularity
+    popular_songs = songs_normalize[songs_normalize['popularity'] > 50]
 
     # Create a scatter trace for song popularity
-    popularity_trace = go.Scatter(x=songs_normalize['year'], y=songs_normalize['popularity'], name='Popularity', mode='markers', marker=dict(size=8, color='black'))
+    fig = px.scatter(popular_songs, x='year', y='popularity', color='popularity', size='popularity', title='Feature by Popularity', width=900, height=500, color_continuous_scale='Viridis', range_color=[0, 100])
 
-    # Create the layout with checklist dropdown
-    layout = go.Layout(
-        title='Average Feature Value per Year',
-        title_x=0.3,  # Set the title position to the center
-        title_y=0.9,  # Set the title position to the upper part
+    # Add reference lines and traces to the figure
+    for line in lines:
+        fig.add_trace(line)
+
+    # Update the layout
+    fig.update_layout(
         xaxis_title='Year',
-        yaxis_title='Average Normalized Value',
+        yaxis_title='Popularity',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
@@ -153,7 +150,7 @@ def first_vis_alt(data):
                     dict(
                         label='All',
                         method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Feature by Popularity'}]
                     )
                 ]),
                 direction='down',  # the position of the dropdown
@@ -166,12 +163,6 @@ def first_vis_alt(data):
         ]
     )
 
-    # Create the figure
-    fig = go.Figure(data=lines + reference_lines + [popularity_trace], layout=layout)
-    fig.update_layout(
-        width=1000,  # Set the width of the chart
-        height=600,  # Set the height of the chart
-    )
     # Display the figure
     col1, col2 = st.columns([1, 7])
     with col1:
