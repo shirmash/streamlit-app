@@ -319,9 +319,9 @@ def map_vis(map_data):
                         color='popularity', color_continuous_scale='RdYlBu',
                         labels={'value': 'Average Popularity'}, title='Average Popularity by Country', projection="natural earth")
 
-    fig.update_layout(coloraxis_colorbar=dict(title='Average Popularity'))
     # Display the graph
-      fig.update_layout(
+    fig.update_layout(
+        coloraxis_colorbar=dict(title='Average Popularity',
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
