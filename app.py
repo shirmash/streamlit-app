@@ -46,7 +46,7 @@ def first_vis(data):
     (2011, 2015), 
     (2016, 2020)]
     #colors =['#ff9896', '#ED553B','#3CAEA3', '#F9564F']# Assign colors for each year range
-    colors=['#d62728', '#ED553B','#2ca02c', '#98df8a']
+    colors=['#d62728', '#F9564F','#2ca02c', '#98df8a']
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
@@ -81,8 +81,8 @@ def first_vis(data):
         legend=dict(title='Year Range'),
         annotations=[
             dict(
-                x=1.16,
-                y=0.31,
+                x=1.18,
+                y=0.4,
                 xref="paper",
                 yref="paper",
                 xanchor="center",
