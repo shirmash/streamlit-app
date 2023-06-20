@@ -64,16 +64,12 @@ def first_vis(data):
 
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
-    col1, col2, col3 = st.columns([1, 4, 1])
-    with col1:
-        st.write("")
-    
-    with col2:
-        # Place your plotly_chart code here
-        st.plotly_chart(fig)
-    
-    with col3:
-        st.write("")
+     # Display the figure in Streamlit
+        col1, col2 = st.columns([1,16])
+        with col1:
+            st.write("")
+        with col2:
+            st.plotly_chart(fig)
 
 def second_vis(map_data):
     avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
