@@ -89,6 +89,11 @@ def first_vis(data):
         showarrow=False,
         font=dict(size=12)
     )])
+     fig = go.Figure(data=traces, layout=layout)
+    fig.update_layout(     
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
+    )
     col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
