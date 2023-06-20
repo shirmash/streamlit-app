@@ -34,7 +34,7 @@ def first_vis(data):
     non_numeric_columns = data.select_dtypes(exclude=np.number).columns
     data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
+    avg_popularity = data.groupby(['year'], as_index=False).agg({'popularity': 'mean', **{col: 'mean' for col in features_names}})
     avg_popularity[features_names] = avg_popularity[features_names].round(2)
 
     # Continue with the rest of the code for visualization
