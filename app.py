@@ -108,26 +108,24 @@ def first_vis_alt(data):
     # Select feature using Streamlit
     select_feature = st.selectbox('Choose feature :', features_names)
 
-    fig = px.scatter(songs_normalize, x=select_feature, y='popularity', color='year', title=f'Popularity by {select_feature} and Year', width=900, height=500,
-                     color_continuous_scale='viridis', color_continuous_midpoint=data['year'].median())
+    year_ranges = [(1998, 2003), (2004, 2009), (2010, 2015), (2016, 2020)]
+
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[f'{range[0]}-{range[1]}' for range in year_ranges])
+
+    for i, range in enumerate(year_ranges):
+        range_df = songs_normalize[(songs_normalize['year'] >= range[0]) & (songs_normalize['year'] <= range[1])]
+        fig.add_trace(go.Scatter(x=range_df[select_feature], y=range_df['popularity'], mode='markers', name=f'{range[0]}-{range[1]}'), row=(i // 2) + 1, col=(i % 2) + 1)
+
+    fig.update_layout(title=f'Popularity by {select_feature} and Year', width=900, height=900)
 
     # Update the layout
-    fig.update_layout(
-        xaxis_title=select_feature,
-        yaxis_title='Popularity',
-        title_x=0.5,  # Set the title position to the center
-        showlegend=True
-    )
-
-    # Create the figure
-    fig.update_traces(marker=dict(size=5))
+    fig.update_xaxes(title_text=select_feature, row=1, col=1)
+    fig.update_xaxes(title_text=select_feature, row=1, col=2)
+    fig.update_yaxes(title_text='Popularity', row=1, col=1)
+    fig.update_yaxes(title_text='Popularity', row=2, col=1)
 
     # Display the figure
-    col1, col2 = st.columns([1, 16])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
+    st.plotly_chart(fig)
 def second_vis(data):
     # Preprocess the data
     data = data.copy()
