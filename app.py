@@ -81,7 +81,7 @@ def first_vis(data):
         legend=dict(title='Year Range'),
         annotations=[
             dict(
-                x=1.05,
+                x=1.08,
                 y=0.65,
                 xref="paper",
                 yref="paper",
