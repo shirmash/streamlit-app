@@ -94,15 +94,11 @@ def first_vis(data):
         st.plotly_chart(fig)
         
 def first_vis_alt(data):
-    x='popularity'
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
     songs_normalize.sort_values('popularity', inplace=True)
     scaler = MinMaxScaler()
     songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
-
-    # Get the columns names and save only the relevant ones
-    songs_normalize = songs_normalize.drop('popularity', axis=1)
     
     # Get the feature names
     column_names = list(songs_normalize.columns.values)
