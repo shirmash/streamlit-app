@@ -190,11 +190,10 @@ def map_vis(map_data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-        
-
+    
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
-st.header("Are there any notable differences between popular songs from different years? ")
+st.header("Are there any notable differences in the features between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
 first_vis(data)
 st.header('What are the characteristics that have the strongest influence on the popularity of a song? ')
