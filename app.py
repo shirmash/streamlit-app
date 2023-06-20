@@ -18,43 +18,40 @@ data = pd.read_csv('songs_normalize.csv')
 map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 def first_vis(data):
-    # Copy the data and drop irrelevant columns
     data = data.copy()
     data = data.drop(['explicit', 'genre'], axis=1)
 
-    # Normalize the selected features
     scaler = MinMaxScaler()
-    features_to_normalize = data.columns.difference(['artist', 'song', 'year', 'explicit'])
-    data[features_to_normalize] = scaler.fit_transform(data[features_to_normalize])
+    data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
+        data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
 
-    # Get the list of feature names
-    features_names = features_to_normalize.tolist()
+    column_names = list(data.columns.values)
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_names = [item for item in column_names if item not in features_to_remove]
 
-    # Create a scroll-down bar to choose the feature
-    selected_feature = st.selectbox('Select Feature:', features_names)
+    non_numeric_columns = data.select_dtypes(exclude=pd.core.dtypes.common.numeric).columns
+    data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    # Calculate the range of the selected feature
-    feature_min = data[selected_feature].min()
-    feature_max = data[selected_feature].max()
+    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
 
-    # Convert minimum and maximum values to Python floats
-    feature_min = float(feature_min)
-    feature_max = float(feature_max)
+    st.title("Feature Analysis")
+    
+    selected_feature = st.selectbox("Select Feature:", features_names)
 
-    # Create a range slider for x-axis range
+    feature_min = round(avg_popularity[selected_feature].min(), 2)
+    feature_max = round(avg_popularity[selected_feature].max(), 2)
     x_min, x_max = st.slider('Select X-axis Range:', feature_min, feature_max, (feature_min, feature_max))
 
-    # Update the x-axis range based on the slider selection
-    fig = px.scatter(data, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
-    fig.update_xaxes(range=[x_min, x_max])
+    filtered_data = avg_popularity[
+        (avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
 
-    # Filter the data based on the selected x-axis range
-    filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
-
-    # Create a scatter plot
-    fig.add_trace(go.Scatter(x=filtered_data[selected_feature], y=filtered_data['popularity'], mode='markers', name='Filtered Data'))
-
+    fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year',
+                     title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
+                     color_continuous_scale='viridis', range_color=[avg_popularity['year'].min(),
+                                                                     avg_popularity['year'].max()])
+    fig.update_layout(xaxis_title=selected_feature, yaxis_title='Popularity')
     st.plotly_chart(fig)
+
 
 # def first_vis(data):
 #     songs_popular = data.copy()
