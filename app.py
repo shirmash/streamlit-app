@@ -72,14 +72,23 @@ def first_vis(data):
         # Add the trace to the list
         traces.append(trace)
     
-    # Create the layout
-    layout = go.Layout(
+        layout = go.Layout(
         title=f"Feature: {selected_feature} vs Popularity",
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
-        legend=dict(title='Year Range')
-    )
+        legend=dict(title='Year Range'),
+        annotations=[
+            dict(
+                x=0.5,
+                y=1.15,
+                xref="paper",
+                yref="paper",
+                xanchor="center",
+                yanchor="bottom",
+                text="One click to remove the feature",
+                showarrow=False,
+                font=dict(size=12) )] )
     
     # Create the figure
     fig = go.Figure(data=traces, layout=layout)
