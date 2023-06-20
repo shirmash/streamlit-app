@@ -144,13 +144,13 @@ def third_vis(data):
     
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
-st.header("How does the value of a feature influence the popularity of songs across different time periods?")
+st.subheader("How does the value of a feature influence the popularity of songs across different time periods?")
 st.write("Discover how different features influence the popularity of songs. Each data point represents a song. Use the slider to narrow down the songs within a specific range of the selected feature, gaining insights into their trends.")
 st.write("To further refine your analysis, simply click on the name of a year range in the legend to temporarily remove it from the graph. This enables you to focus on specific periods of interest. In addition you can hover over a data point to see the name of the song and the artist.")
 first_vis(data)
-st.header('on: From which countries do the artists with the most popular songs originate?')
+st.subheader('on: From which countries do the artists with the most popular songs originate?')
 st.write("This visualization displays the average popularity of songs in different countries.Each country on the map is color-coded to reflect the average popularity of songs in that region. Warm colors like red indicate lower popularity, while cool colors like blue represent higher popularity. By hovering over a country, you can uncover its specific average popularity value, gaining insights into the musical preferences of different regions.Feel free to move around by dragging the map and use the zoom controls to get a closer look at specific areas of interest.")
 second_vis(map_data)
-st.header('How has the popularity of different genres changed over time?')
+st.subheader('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the average popularity level of the genre in this year, where higher values indicate greater popularity.")
 third_vis(data)
