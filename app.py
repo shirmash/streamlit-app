@@ -36,8 +36,12 @@ def first_vis(data):
     # Group data by year and calculate the average normalized value and popularity
     avg_popularity = data.groupby('year')[[selected_feature, 'popularity']].mean().reset_index()
 
+    # Calculate the range of the selected feature
+    feature_min = data[selected_feature].min()
+    feature_max = data[selected_feature].max()
+
     # Create a range slider for x-axis range
-    x_min, x_max = st.slider('Select X-axis Range:', 0.0, 1.0, (0.0, 1.0))
+    x_min, x_max = st.slider('Select X-axis Range:', feature_min, feature_max, (feature_min, feature_max))
 
     # Update the x-axis range based on the slider selection
     fig = px.scatter(avg_popularity, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
