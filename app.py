@@ -74,7 +74,7 @@ def first_vis(data):
         traces.append(trace)
     
         layout = go.Layout(
-        title=f"Feature: {selected_feature} vs Popularity",
+        title=f"Feature: {selected_feature} popularity",
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
@@ -93,6 +93,10 @@ def first_vis(data):
     
     # Create the figure
     fig = go.Figure(data=traces, layout=layout)
+    fig.update_layout(     
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
+    )
     # Show the plot
     col1, col2 = st.columns([1,16])
     with col1:
