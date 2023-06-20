@@ -37,7 +37,7 @@ def first_vis(data):
     avg_popularity = data.groupby('year')[[selected_feature, 'popularity']].mean().reset_index()
 
     # Create a range slider for x-axis range
-    x_min, x_max = st.slider('Select X-axis Range:', 0.0, 1.0, (0.0, 1.0))
+    x_min, x_max = st.slider('Select Feature Range:', 0.0, 1.0, (0.0, 1.0))
 
     # Filter the data based on the selected x-axis range
     filtered_data = avg_popularity[(avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
