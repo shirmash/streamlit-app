@@ -18,7 +18,6 @@ data = pd.read_csv('songs_normalize.csv')
 map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 def first_vis(data):
-    # Preprocess the data
     data = data.copy()
     data = data.drop(['explicit', 'genre'], axis=1)
 
@@ -26,35 +25,30 @@ def first_vis(data):
     data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
         data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
 
+    # Get the columns names and save only the relevant ones
+    column_names = list(data.columns.values)
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_names = [item for item in column_names if item not in features_to_remove]
+
     # Convert non-numeric columns to numeric
-    non_numeric_columns = data.select_dtypes(exclude='number').columns
+    non_numeric_columns = data.select_dtypes(exclude=np.number).columns
     data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    # Calculate average popularity
-    avg_popularity = data.groupby('year', as_index=False).mean()
-    avg_popularity = avg_popularity.round(2)
+    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
 
-    # Set up Streamlit app
-    st.title("Popularity vs. Normalized Value")
+    st.title('Song Popularity Visualization')
+    st.sidebar.title('Select Range')
 
-    # Range slider for selecting x-range
-    x_min, x_max = st.slider("Select x-range", 0.0, 1.0, (0.0, 1.0), step=0.01)
+    x_min, x_max = st.sidebar.slider('Select x-range', min_value=0.0, max_value=1.0, value=(0.0, 1.0), step=0.01)
 
-    # Filter data based on x-range
     filtered_data = avg_popularity[(avg_popularity['average'] >= x_min) & (avg_popularity['average'] <= x_max)]
 
-    # Create scatter plot
-    fig = go.Figure()
-    for column in filtered_data.columns[1:]:
-        fig.add_trace(go.Scatter(x=filtered_data['avrage_value'], y=filtered_data[column], name=column))
-
-    fig.update_layout(title="Popularity vs. Normalized Value",
-                      xaxis_title="Normalized Value",
-                      yaxis_title="Popularity",
-                      legend_title="Year")
-
-    # Display the scatter plot
-    st.plotly_chart(fig)
+    for column in features_names:
+        line = go.Scatter(x=filtered_data['average'], y=filtered_data[column], name=column, mode='markers')
+        layout = go.Layout(title='{} vs. Average Popularity'.format(column), xaxis=dict(title='Average Popularity'),
+                           yaxis=dict(title=column), showlegend=True)
+        fig = go.Figure(data=[line], layout=layout)
+        st.plotly_chart(fig)
 
 # def first_vis(data):
 #     songs_popular = data.copy()
