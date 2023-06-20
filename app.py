@@ -22,7 +22,6 @@ st.title('Visualization: Final Project')
 data = pd.read_csv('songs_normalize.csv')
 map_data= pd.read_csv('map_data.csv')
 def first_vis(data):
-    x='popularity'
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
     songs_normalize.sort_values('popularity', inplace=True)
@@ -95,6 +94,7 @@ def first_vis(data):
         st.plotly_chart(fig)
         
 def first_vis_alt(data):
+    x='popularity'
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
     songs_normalize.sort_values('popularity', inplace=True)
