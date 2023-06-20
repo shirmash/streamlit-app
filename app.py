@@ -23,9 +23,9 @@ map_data= pd.read_csv('map_data.csv')
 def first_vis(data):
     songs_popular = data.copy()
 
-    # Filter songs by popularity range
-    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(0, 89))
-    songs_popular = songs_popular[(songs_popular['popularity'] >= popularity_range[0]) & (songs_popular['popularity'] <= popularity_range[1])]
+    # Filter songs by year range
+    year_range = st.slider('Select Year Range', min_value=1999, max_value=2020, value=(1999, 2020))
+    songs_popular = songs_popular[(songs_popular['year'] >= year_range[0]) & (songs_popular['year'] <= year_range[1])]
 
     # Get the column names and save only the relevant ones
     column_names = list(songs_popular.columns.values)
@@ -47,16 +47,16 @@ def first_vis(data):
     lines = []
     for column in avg_popularity.columns:
         if column != 'year':
-            line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
+            line = go.Scatter(x=avg_popularity[column], y=avg_popularity['popularity'], name=column)
             lines.append(line)
 
     # Create the layout with checklist dropdown
     layout = go.Layout(
-        title='Average Feature Value per Year',
+        title='Average Feature Value vs Popularity',
         title_x=0.3,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
-        xaxis_title='Year',
-        yaxis_title='Average Normalized Value',
+        xaxis_title='Average Normalized Value',
+        yaxis_title='Popularity',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
@@ -78,7 +78,7 @@ def first_vis(data):
                     dict(
                         label='All',
                         method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value vs Popularity'}]
                     )
                 ]),
                 direction='down',  # the position of the dropdown
