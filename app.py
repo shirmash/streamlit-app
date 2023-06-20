@@ -126,75 +126,84 @@ def first_vis_alt(data):
 
     # Display the figure
     st.plotly_chart(fig)
-def second_vis(data):
-    # Preprocess the data
-    data = data.copy()
-    la = LabelEncoder()
-    label = la.fit_transform(data["genre"])
-    data["genre"] = label
-    data.drop(["artist", "song"], axis=1, inplace=True)
+def first_vis_alt(data):
+    songs_normalize = data.copy()
+    songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
 
-    # Split the data into train and test sets
-    x = data.drop(["popularity"], axis=1)
-    y = data["popularity"]
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=101)
+    scaler = MinMaxScaler()
+    songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
+    # Get the columns names and save only the relevant ones
+    column_names = list(songs_normalize.columns.values)
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+    features_names = [item for item in column_names if item not in features_to_remove]
+    # Convert non-numeric columns to numeric
+    non_numeric_columns = songs_normalize.select_dtypes(exclude=np.number).columns
+    songs_normalize[non_numeric_columns] = songs_normalize[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+    avg_popularity = songs_normalize.groupby(['year'], as_index=False)[features_names].mean()
 
-    # Train the model
-    model = DecisionTreeRegressor()
-    model.fit(x_train, y_train)
+    # Create the lines for the plot
+    lines = []
+    for column in avg_popularity.columns:
+        if column != 'year':
+            line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
+            lines.append(line)
 
-    # Extract feature names from the original dataset or use x.columns
-    feature_names = x.columns.tolist()
+    # Create reference lines for popular songs
+    popular_songs = songs_normalize[songs_normalize['popularity'] > 80]
+    reference_lines = []
+    for _, song in popular_songs.iterrows():
+        reference_line = go.Scatter(x=[song['year'], song['year']], y=[0, 1], name='Popular Song', mode='lines', line=dict(dash='dash'))
+        reference_lines.append(reference_line)
 
-    # Create the SHAP explainer using TreeExplainer
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(x, check_additivity=False)
-
-    # Calculate average SHAP values for each feature filtered by popularity
-    popularity_values = np.sort(data['popularity'].unique())
-    shap_values_avg = []
-    for feature in feature_names:
-        filtered_shap_values = shap_values[:, feature_names.index(feature)]
-        shap_values_avg.append(np.mean(filtered_shap_values, axis=0))
-    shap_df_avg = pd.DataFrame(shap_values_avg, index=feature_names, columns=['Average SHAP Value'])
-
-    # Select the feature using Streamlit's selectbox
-    feature_dropdown = st.selectbox("Feature:", feature_names)
-
-    # Update the graph based on the selected feature
-    shap_values_feature = shap_values[:, feature_names.index(feature_dropdown)]
-    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-    sorted_shap_vals = [np.mean(shap_values_feature[np.isin(data['popularity'], range)]) for range in reversed(popularity_ranges)]
-    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-
-
-    # Create the bar chart using go.Bar and go.Figure
-    fig = go.Figure(data=go.Bar(
-        y=sorted_popularities,
-        x=sorted_shap_vals,
-        orientation='h',
-        marker=dict(
-            color=['lightcoral' if val < 0 else 'limegreen' for val in sorted_shap_vals],
-            opacity=0.8
-        )
-    ))
-    fig.update_layout(
-        title={
-            'text': f"Average SHAP Values by Popularity Range for {feature_dropdown}",
-            'y': 0.9,  # Adjust the y-coordinate to center the title
-            'x': 0.5,  # Set the x-coordinate to the center of the graph
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        yaxis=dict(tickfont=dict(size=10)),
-        xaxis=dict(tickfont=dict(size=10)),
-        width=900,  # Set the width of the chart
-        height=500,
+    # Create the layout with checklist dropdown
+    layout = go.Layout(
+        title='Average Feature Value per Year',
+        title_x=0.3,  # Set the title position to the center
+        title_y=0.9,  # Set the title position to the upper part
+        xaxis_title='Year',
+        yaxis_title='Average Normalized Value',
+        legend=dict(
+            title='Choose Features',
+            title_font=dict(size=18),
+        ),
+        annotations=[
+            dict(
+                x=1.18,
+                y=0.37,  # Adjust the y-coordinate to position the note below the legend
+                xref='paper',
+                yref='paper',
+                text='One click to remove the feature',
+                showarrow=False,
+                font=dict(size=10),
+            )
+        ],
+        updatemenus=[  # the user can choose to see all features in one click
+            dict(
+                buttons=list([
+                    dict(
+                        label='All',
+                        method='update',
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+                    )
+                ]),
+                direction='down',  # the position of the dropdown
+                showactive=True,
+                x=1.1,
+                xanchor='right',
+                y=1.15,
+                yanchor='top'
+            )
+        ]
     )
-    # Display the graph using st.plotly_chart
-    col1, col2 = st.columns([1, 16])
+
+    # Create the figure
+    fig = go.Figure(data=lines + reference_lines, layout=layout)
+    fig.update_layout(
+        width=1000,  # Set the width of the chart
+        height=600,  # Set the height of the chart
+    )
+    # Display the figure
+    col1, col2 = st.columns([1, 7])
     with col1:
         st.write("")
     with col2:
