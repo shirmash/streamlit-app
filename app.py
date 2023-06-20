@@ -19,22 +19,14 @@ st.title('Visualization: Final Project')
 
 def first_vis(data):
     data = data.copy()
-
-    # Make a copy of the original data
     range_data = data.copy()
-
-    # Drop columns
     range_data = range_data.drop(['explicit', 'genre'], axis=1)
-
     # Scale the data
     scaler = MinMaxScaler()
-    range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])] = scaler.fit_transform(
-        range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
-
+    range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])] = scaler.fit_transform(range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
     column_names = list(range_data.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity', 'mode']
     features_names = [item for item in column_names if item not in features_to_remove]
-
     non_numeric_columns = range_data.select_dtypes(include=['object']).columns
     range_data[non_numeric_columns] = range_data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
@@ -45,49 +37,39 @@ def first_vis(data):
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = range_data[(range_data[selected_feature] >= x_min) & (range_data[selected_feature] <= x_max)]
-    filtered_data['year_range'] = pd.cut(filtered_data['year'],
-                                         bins=[range_start for (range_start, _) in year_ranges] + [
-                                             filtered_data['year'].max()],
-                                         labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
+    filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [ filtered_data['year'].max()],labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     traces = []
     legend_labels = []  # Store the legend labels
     # Iterate over the year ranges
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
+        # Round the values of popularity and selected feature to 2 decimal places
+        rounded_popularity = range_data['popularity'].round(2)
+        rounded_feature = range_data[selected_feature].round(2)
         # Create a scatter trace for each year range
         trace = go.Scatter(
-            x=range_data[selected_feature],
-            y=range_data['popularity'],
+            x=rounded_feature,
+            y=rounded_popularity,
             mode='markers',
             marker=dict(color=colors[range_index]),
             text=data['song'].astype(str) + ' - ' + data['artist'].astype(str),  # Set the text for hover tooltip
-            name=range_label  # Set the legend label as the year range
-        )
+            name=range_label  # Set the legend label as the year range)
         traces.append(trace)
         legend_labels.append(range_label)
-
     layout = go.Layout(
         title={
-            'text': f"{selected_feature} Impact On Songs Popularity",
-            'x': 0.43,
-            'y': 0.9,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
+            'text': f"{selected_feature} Impact On Songs Popularity",'x': 0.43, 'y': 0.9,'xanchor': 'center','yanchor': 'top'},
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
         legend=dict(title='Year Range'),  # Set the legend labels
         annotations=[
             dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
-                 showarrow=False, font=dict(size=13))
-        ]
-    )
+                 showarrow=False, font=dict(size=13))])
 
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
-
     col1, col2 = st.columns([1, 16])  # place graph in middle of the page
     with col1:
         st.write("")
