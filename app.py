@@ -48,7 +48,7 @@ def first_vis(data):
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Assign colors for each year range
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
-    
+    filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
     # Add a new column for the categorical color based on year range
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=False, right=False)
     
