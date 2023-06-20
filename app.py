@@ -101,86 +101,6 @@ def first_vis(data):
     
     # Display the figure
     st.plotly_chart(fig)
-def second_vis_alt(data):
-    # Preprocess the data
-    data = data.copy()
-    la = LabelEncoder()
-    label = la.fit_transform(data["genre"])
-    data["genre"] = label
-    data.drop(["artist", "song"], axis=1, inplace=True)
-
-    # Define the year ranges for the facets
-    year_ranges = [(1998, 2003), (2004, 2009), (2010, 2015), (2016, 2020)]
-
-    # Define the popularity ranges
-    popularity_ranges = [range(0, 18), range(18, 36), range(36, 54), range(54, 72), range(72, 90)]
-
-    # Dropdown menu for feature selection
-    feature_names = data.columns.tolist()
-    feature_dropdown = st.selectbox("Feature:", feature_names)
-
-    # Create a figure with subplots for each facet
-    fig = make_subplots(rows=2, cols=2, subplot_titles=[f"{start}-{end}" for start, end in year_ranges])
-
-    # Iterate over the year ranges and create the facets
-    for i, (start_year, end_year) in enumerate(year_ranges):
-        facet_data = data[(data['year'] >= start_year) & (data['year'] <= end_year)]
-
-        # Calculate average feature values for each popularity range in the facet
-        feature_avg_values = []
-        for popularity_range in popularity_ranges:
-            avg_value = facet_data[facet_data['popularity'].isin(popularity_range)][feature_dropdown].mean()
-            feature_avg_values.append(avg_value)
-
-        # Normalize the feature average values between 0 and 1
-        min_value = min(feature_avg_values)
-        max_value = max(feature_avg_values)
-        if min_value != max_value:
-            normalized_values = (feature_avg_values - min_value) / (max_value - min_value)
-        else:
-            normalized_values = feature_avg_values
-
-        # Create the bar chart for the facet
-        row = (i // 2) + 1
-        col = (i % 2) + 1
-        fig.add_trace(go.Bar(
-            x=normalized_values,
-            y=[f"Popularity {p.start}-{p.stop-1}" for p in popularity_ranges],
-            orientation='h',
-            marker=dict(
-                color='rgb(63, 81, 181)',
-                line=dict(
-                    color='rgb(40, 55, 71)',
-                    width=1.5
-                )
-            ),
-            opacity=0.8,
-            showlegend=False
-        ), row=row, col=col)
-
-    fig.update_layout(
-        yaxis_title='Popularity Range',
-        xaxis_title='Average Normalized Value',
-        title={
-            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-            'y': 0.9,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        yaxis=dict(
-            tickfont=dict(size=10),
-            gridcolor='rgb(238, 238, 238)'
-        ),
-        xaxis=dict(
-            tickfont=dict(size=10),
-            gridcolor='rgb(238, 238, 238)'
-        ),
-        width=800,
-        height=600
-    )
-
-    st.plotly_chart(fig)
 def third_vis(data):
     # Drop rows with missing genre values
     data.dropna(subset=['genre'], inplace=True)
@@ -281,8 +201,6 @@ first_vis(data)
 st.header('What are the characteristics that have the strongest influence on the popularity of a song? ')
 st.write("Explore the factors that shape a song's popularity. By selecting different features from the dropdown menu, you can observe how various characteristics influence a song's popularity.")
 st.write(" A positive SHAP value suggests that as a feature's value increases, it tends to increase the song's popularity. On the other hand, a negative SHAP value indicates that as a feature's value increases, it may have a diminishing effect on the song's popularity.For instance, take the feature 'duration_ms'  that is shown below as an example. As the duration of the song increases, it may have a negative impact on the song's popularity. ")
-#second_vis(data)
-second_vis_alt(data)
 map_vis(map_data)
 st.header('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the popularity level, where higher values indicate greater popularity.")
