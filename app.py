@@ -48,14 +48,9 @@ def first_vis(data):
         rounded_popularity = range_data['popularity'].round(2)
         rounded_feature = range_data[selected_feature].round(2)
         # Create a scatter trace for each year range
-        trace = go.Scatter(
-            x=rounded_feature,
-            y=rounded_popularity,
-            mode='markers',
-            marker=dict(color=colors[range_index]),
-            text=data['song'].astype(str) + ' - ' + data['artist'].astype(str), name=range_label )
-            traces.append(trace)
-            legend_labels.append(range_label)
+        trace = go.Scatter(x=rounded_feature,y=rounded_popularity,mode='markers',marker=dict(color=colors[range_index]),text=data['song'].astype(str) + ' - ' + data['artist'].astype(str), name=range_label )
+        traces.append(trace)
+        legend_labels.append(range_label)
     layout = go.Layout(
         title={
             'text': f"{selected_feature} Impact On Songs Popularity",'x': 0.43, 'y': 0.9,'xanchor': 'center','yanchor': 'top'},
