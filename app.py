@@ -81,13 +81,13 @@ def first_vis(data):
         legend=dict(title='Year Range'),
         annotations=[
             dict(
-                x=1.1,
+                x=1.15,
                 y=0.55,
                 xref="paper",
                 yref="paper",
                 xanchor="center",
                 yanchor="bottom",
-                text="One click to remove the feature",
+                text="One click to remove",
                 showarrow=False,
                 font=dict(size=12) )] )
     
