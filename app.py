@@ -40,6 +40,10 @@ def first_vis(data):
     feature_min = data[selected_feature].min()
     feature_max = data[selected_feature].max()
 
+    # Convert minimum and maximum values to Python floats
+    feature_min = float(feature_min)
+    feature_max = float(feature_max)
+
     # Create a range slider for x-axis range
     x_min, x_max = st.slider('Select X-axis Range:', feature_min, feature_max, (feature_min, feature_max))
 
