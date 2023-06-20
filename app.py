@@ -321,6 +321,17 @@ def map_vis(map_data):
 
     fig.update_layout(coloraxis_colorbar=dict(title='Average Popularity'))
     # Display the graph
+      fig.update_layout(
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
+    )
+
+    # Display the figure in Streamlit
+    col1, col2 = st.columns([1,16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
     st.plotly_chart(fig)
 
 
