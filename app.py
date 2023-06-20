@@ -45,7 +45,7 @@ def first_vis(data):
 
     fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year',
                      title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
-                     color_continuous_scale='viridis', range_color=[data['year'].min(), data['year'].max()])
+                     color_continuous_scale='Plasma', range_color=[data['year'].min(), data['year'].max()])
     fig.update_layout(xaxis_title=selected_feature, yaxis_title='Popularity')
     st.plotly_chart(fig)
 
