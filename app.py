@@ -15,7 +15,7 @@ np.bool = np.bool_
 
 st.set_page_config(layout="wide",page_title="Spotify Music Insights")
 data = pd.read_csv('songs_normalize.csv')
-data_map = pd.read_csv('data_map.csv')
+map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 
 def first_vis(data):
