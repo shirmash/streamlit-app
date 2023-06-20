@@ -4,7 +4,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 import pandas as pd
 import matplotlib.pyplot as plt
-import shap
 import plotly.express as px
 import streamlit as st
 import plotly.graph_objects as go
@@ -43,7 +42,7 @@ def first_vis(data):
     songs_popular[features_names] = scaler.fit_transform(songs_popular[features_names])
     
     avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
-
+    avg_popularity[[features_names]]=avg_popularity[[features_names]].round(2)
     # Create the lines for the plot
     lines = []
     for column in avg_popularity.columns:
