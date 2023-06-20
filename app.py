@@ -20,7 +20,7 @@ st.title('Visualization: Final Project')
 def first_vis(data):
     data = data.copy()
     range_data = data.copy()
-    range_data = range_data.drop(['explicit', 'genre'], axis=1)
+    range_data = range_data.drop(['explicit', 'genre', 'key'], axis=1)
     # Scale the data
     scaler = MinMaxScaler()
     range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode','key'])] = scaler.fit_transform(range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
