@@ -60,7 +60,11 @@ def first_vis(data):
             y=range_data['popularity'],
             mode='markers',
             marker=dict(color=colors[range_index]),
-            name=range_label
+            name=range_label,
+            text=range_data['song'] + ' - ' + range_data['artist'],  # Set the text for hover tooltip
+            hovertemplate='%{text}<br>' +
+                          f'{selected_feature}: ' + '%{x}<br>' +
+                          'Popularity: ' + '%{y}<br>',  # Customize hover tooltip format
         )
         traces.append(trace)
 
@@ -77,14 +81,15 @@ def first_vis(data):
         showlegend=True,
         legend=dict(title='Year Range'),
         annotations=[
-            dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
-                 showarrow=False, font=dict(size=13))]
+            dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom",
+                 text="One click to remove", showarrow=False, font=dict(size=13))
+        ]
     )
-    
+
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
 
-    col1, col2 = st.columns([1,16])##place graph in middle of the page
+    col1, col2 = st.columns([1, 16])  # place graph in middle of the page
     with col1:
         st.write("")
     with col2:
