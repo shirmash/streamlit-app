@@ -102,7 +102,7 @@ def first_vis_alt(data):
     songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist', 'song', 'year', 'explicit'])])
     
     # Create a slider for selecting the popularity range
-    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(50, 89))
+    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=100, value=(50, 100))
     
     # Filter songs by popularity range
     songs_popular = songs_normalize[(songs_normalize['popularity'] >= popularity_range[0]) & (songs_normalize['popularity'] <= popularity_range[1])]
@@ -173,12 +173,7 @@ def first_vis_alt(data):
     )
     
     # Display the figure
-    col1, col2 = st.columns([1, 7])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
-        
+    st.plotly_chart(fig)
 def second_vis_alt(data):
     # Preprocess the data
     data = data.copy()
