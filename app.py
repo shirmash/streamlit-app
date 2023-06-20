@@ -41,10 +41,10 @@ def first_vis(data):
     feature_max = round(data[selected_feature].max(), 2)
     x_min, x_max = st.slider('Select X-axis Range:', float(feature_min), float(feature_max), (float(feature_min), float(feature_max)))
     year_ranges = [
-    (1999, 2004),  # Example year range 1
-    (2005, 2010),  # Example year range 2
-    (2011, 2015),  # Example year range 3
-    (2016, 2020)   # Example year range 4]
+    (1999, 2004),
+    (2005, 2010), 
+    (2011, 2015), 
+    (2016, 2020)]
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Assign colors for each year range
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
