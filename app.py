@@ -304,6 +304,9 @@ def third_vis(data):
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
+    
+    # Update the title based on the selected genre
+    fig.update_layout(title=f'Popularity of {select_genre} Over the Years')
 
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
@@ -311,7 +314,6 @@ def third_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-        
 
 def map_vis(map_data):
     avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
