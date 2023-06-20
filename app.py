@@ -49,7 +49,7 @@ def first_vis(data):
     fig.update_xaxes(range=[x_min, x_max])
 
     # Filter the data based on the selected x-axis range
-    filtered_data = data[data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
+    filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
 
     # Create a scatter plot
     fig.add_trace(go.Scatter(x=filtered_data[selected_feature], y=filtered_data['popularity'], mode='markers', name='Filtered Data'))
