@@ -81,7 +81,7 @@ def first_vis(data):
         legend=dict(title='Year Range'),
         annotations=[
             dict(
-                x=1.12,
+                x=1.1,
                 y=0.55,
                 xref="paper",
                 yref="paper",
@@ -93,8 +93,6 @@ def first_vis(data):
     
     # Create the figure
     fig = go.Figure(data=traces, layout=layout)
-
-    
     # Show the plot
     col1, col2 = st.columns([1,16])
     with col1:
