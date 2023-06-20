@@ -41,7 +41,7 @@ def first_vis(data):
     scaler = MinMaxScaler()
     songs_popular[features_names] = scaler.fit_transform(songs_popular[features_names])
 
-    avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
+    avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names + ['popularity']].mean()
     avg_popularity[features_names] = avg_popularity[features_names].round(2)
 
     # Create the lines for the plot
