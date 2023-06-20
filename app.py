@@ -96,7 +96,7 @@ def first_vis_alt(data):
     songs_popular = data.copy()
     
     # Filter songs by popularity range
-    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(50, 100))
+    popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(50, 89))
     songs_popular = songs_popular[(songs_popular['popularity'] >= popularity_range[0]) & (songs_popular['popularity'] <= popularity_range[1])]
     
     # Get the column names and save only the relevant ones
