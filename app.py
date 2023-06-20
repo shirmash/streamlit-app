@@ -50,6 +50,7 @@ def first_vis(data):
                                              filtered_data['year'].max()],
                                          labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     traces = []
+    legend_names = []  # Store the legend color names
     # Iterate over the year ranges
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
@@ -60,9 +61,11 @@ def first_vis(data):
             y=range_data['popularity'],
             mode='markers',
             marker=dict(color=colors[range_index]),
-            text=data['song'].astype(str) + ' - ' +data['artist'].astype(str),  # Set the text for hover tooltip
+            text=data['song'].astype(str) + ' - ' + data['artist'].astype(str),  # Set the text for hover tooltip
+            name=range_label  # Set the legend color name as the year range
         )
         traces.append(trace)
+        legend_names.append(range_label)  # Add the year range to the legend color names
 
     layout = go.Layout(
         title={
@@ -75,12 +78,22 @@ def first_vis(data):
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
-        legend=dict(title='Year Range'),
+        legend=dict(title='Year Range', itemsizing='constant', itemclick='toggleothers'),
         annotations=[
             dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
                  showarrow=False, font=dict(size=13))
         ]
     )
+
+    fig = go.Figure(data=traces, layout=layout)
+    fig.update_layout(width=900, height=500)  # Set the height and width of the chart
+    fig.update_traces(showlegend=True, legendgroup='group', name=legend_names)
+
+    col1, col2 = st.columns([1, 16])  # place graph in middle of the page
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
 
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
