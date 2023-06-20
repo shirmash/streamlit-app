@@ -332,8 +332,6 @@ def map_vis(map_data):
         height=500,  # Set the height of the chart
     )
 
-    )
-
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
     with col1:
