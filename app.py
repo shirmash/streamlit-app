@@ -50,7 +50,7 @@ def first_vis(data):
             mode='markers',
             marker=dict(color=colors[range_index]),
             name=range_label,
-            text=range_data['song'] + ' - ' + range_data['artist']  # Set the text for hover tooltip
+            text = range_data['song'].str.cat(range_data['artist'], sep=' - ')
         )
 
     traces.append(trace)
