@@ -155,6 +155,10 @@ def first_vis_alt(data):
         reference_line = go.Scatter(x=[song['year'], song['year']], y=[0, 1], name='Popular Song', mode='lines', line=dict(dash='dash'))
         reference_lines.append(reference_line)
 
+    # Create a scatter trace for song popularity
+    popularity_trace = go.Scatter(x=songs_normalize['year'], y=songs_normalize['popularity'], name='Popularity', mode='markers',
+                                  marker=dict(size=songs_normalize['popularity'], color=songs_normalize['popularity'], showscale=True, colorscale='Viridis'))
+
     # Create the layout with checklist dropdown
     layout = go.Layout(
         title='Average Feature Value per Year',
@@ -196,8 +200,11 @@ def first_vis_alt(data):
         ]
     )
 
+    # Combine all traces
+    data = lines + reference_lines + [popularity_trace]
+
     # Create the figure
-    fig = go.Figure(data=lines + reference_lines, layout=layout)
+    fig = go.Figure(data=data, layout=layout)
     fig.update_layout(
         width=1000,  # Set the width of the chart
         height=600,  # Set the height of the chart
