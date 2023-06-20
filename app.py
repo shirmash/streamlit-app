@@ -18,42 +18,34 @@ data = pd.read_csv('songs_normalize.csv')
 map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 def first_vis(data):
+    # Copy the data and drop irrelevant columns
     data = data.copy()
     data = data.drop(['explicit', 'genre'], axis=1)
 
+    # Normalize the selected features
     scaler = MinMaxScaler()
-    data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
-        data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
+    features_to_normalize = data.columns.difference(['artist', 'song', 'year', 'explicit'])
+    data[features_to_normalize] = scaler.fit_transform(data[features_to_normalize])
 
-    # Get the column names and save only the relevant ones
-    column_names = list(data.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
-    features_names = [item for item in column_names if item not in features_to_remove]
+    # Get the list of feature names
+    features_names = features_to_normalize.tolist()
 
-    # Convert non-numeric columns to numeric
-    non_numeric_columns = data.select_dtypes(exclude=np.number).columns
-    data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+    # Create a scroll-down bar to choose the feature
+    selected_feature = st.selectbox('Select Feature:', features_names)
 
-    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
+    # Group data by year and calculate the average normalized value and popularity
+    avg_popularity = data.groupby('year')[[selected_feature, 'popularity']].mean().reset_index()
 
-    st.title('Popularity Visualization')
+    # Create a range slider for x-axis range
+    x_min, x_max = st.slider('Select X-axis Range:', 0.0, 1.0, (0.0, 1.0))
 
-    # Create a range slider for selecting x-axis range
-    x_min, x_max = st.slider("Select x-axis range", 0.0, 1.0, (0.0, 1.0))
+    # Filter the data based on the selected x-axis range
+    filtered_data = avg_popularity[(avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
 
-    # Filter data based on selected range
-    filtered_data = avg_popularity[(avg_popularity[features_names[0]] >= x_min) & (avg_popularity[features_names[0]] <= x_max)]
-
-    # Create scatter plot
-    fig = go.Figure()
-    for column in features_names:
-        fig.add_trace(go.Scatter(x=filtered_data[column], y=filtered_data['popularity'], name=column))
-
-    # Update layout
-    fig.update_layout(title='Popularity vs Normalized Feature', xaxis_title='Normalized Feature', yaxis_title='Popularity')
-
-    # Display the plot
+    # Create a scatter plot
+    fig = px.scatter(filtered_data, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
     st.plotly_chart(fig)
+
 # def first_vis(data):
 #     songs_popular = data.copy()
     
