@@ -61,7 +61,7 @@ def first_vis(data):
             mode='markers',
             marker=dict(color=colors[range_index]),
             name=range_label,
-            text=range_data['song'] + ' - ' + range_data['artist'],  # Set the text for hover tooltip
+            text=range_data['song'].astype(str) + ' - ' + range_data['artist'].astype(str),  # Set the text for hover tooltip
             hovertemplate='%{text}<br>' +
                           f'{selected_feature}: ' + '%{x}<br>' +
                           'Popularity: ' + '%{y}<br>',  # Customize hover tooltip format
@@ -81,8 +81,8 @@ def first_vis(data):
         showlegend=True,
         legend=dict(title='Year Range'),
         annotations=[
-            dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom",
-                 text="One click to remove", showarrow=False, font=dict(size=13))
+            dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
+                 showarrow=False, font=dict(size=13))
         ]
     )
 
