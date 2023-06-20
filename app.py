@@ -39,28 +39,23 @@ def first_vis(data):
 
     feature_min = round(data[selected_feature].min(), 2)
     feature_max = round(data[selected_feature].max(), 2)
-    x_min, x_max = st.slider('Select X-axis Range:', float(feature_min), float(feature_max), (float(feature_min), float(feature_max)))
+    x_min, x_max = st.slider('select feature range:', float(feature_min), float(feature_max), (float(feature_min), float(feature_max)))
     year_ranges = [
     (1999, 2004),
     (2005, 2010), 
     (2011, 2015), 
     (2016, 2020)]
-    #colors =['#ff9896', '#ED553B','#3CAEA3', '#F9564F']# Assign colors for each year range
     colors=['#d62728', '#F9564F','#2ca02c', '#98df8a']
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
     # Add a new column for the categorical color based on year range
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
-    
-    # Create an empty list to store the traces
     traces = []
-    
     # Iterate over the year ranges
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
-        
         # Create a scatter trace for each year range
         trace = go.Scatter(
             x=range_data[selected_feature],
@@ -69,10 +64,7 @@ def first_vis(data):
             marker=dict(color=colors[range_index]),
             name=range_label
         )
-        
-        # Add the trace to the list
         traces.append(trace)
-    
         layout = go.Layout(
         title=f"{selected_feature} popularity",
         xaxis_title=selected_feature,
@@ -90,14 +82,11 @@ def first_vis(data):
                 text="One click to remove",
                 showarrow=False,
                 font=dict(size=12) )] )
-    
-    # Create the figure
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(     
         width=900,  # Set the width of the chart
         height=500,  # Set the height of the chart
     )
-    # Show the plot
     col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
