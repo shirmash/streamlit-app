@@ -306,7 +306,7 @@ def third_vis(data):
     )
     
     # Update the title based on the selected genre
-    fig.update_layout(title=f'Popularity of the genre '{select_genre}' Over the Years')
+    fig.update_layout(title=f'Popularity of the genre {select_genre} Over the Years')
 
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
