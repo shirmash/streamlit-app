@@ -64,8 +64,7 @@ def first_vis(data):
 
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
-   col1, col2, col3 = st.beta_columns([1, 6, 1])
-
+    col1, col2, col3 = st.columns([1, 6, 1])
     with col1:
         st.write("")
     
