@@ -283,7 +283,7 @@ def third_vis(data):
     layout = go.Layout(
         title='Popularity of Different Genres Over the Years',
         barmode='stack',  # Set the barmode to 'stack' for stacked bars
-        title_x=0.5,  # Set the title position to the center
+        title_xanchor='center',  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
         xaxis_title='Year',
         yaxis_title='Average Popularity',
@@ -306,7 +306,7 @@ def third_vis(data):
     )
     
     # Update the title based on the selected genre
-    fig.update_layout(title=f'Popularity of {select_genre} Over the Years')
+    fig.update_layout(title=f'Popularity of the genre '{select_genre}' Over the Years')
 
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
