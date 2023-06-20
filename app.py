@@ -60,11 +60,11 @@ def first_vis(data):
     # Customize the legend
     fig.update_traces(showlegend=True)
     fig.update_layout(legend_title_text='Year Range')
-        col1, col2 = st.columns([1,16])
-        with col1:
-            st.write("")
-        with col2:
-            st.plotly_chart(fig)
+    col1, col2 = st.columns([1,16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
 
 
 # def first_vis(data):
