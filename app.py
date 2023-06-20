@@ -316,33 +316,18 @@ def map_vis(map_data):
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
 
     # Create the choropleth map using plotly express
-    fig = go.Figure(data=go.Choropleth(
-        locations=avg_popularity['Country'],
-        locationmode='country names',
-        z=avg_popularity['popularity'],
-        colorscale='RdYlBu',
-        colorbar=dict(title='Average Popularity'),
-        text=avg_popularity['Country'],
-        marker_line_color='white',
-        showscale=True
-    ))
+    fig = px.choropleth(avg_popularity, locations='Country', locationmode='country names',
+                        color='popularity', color_continuous_scale='RdYlBu',
+                        labels={'value': 'Average Popularity'}, projection="natural earth")
 
+    # Update the layout to position the title in the middle
     fig.update_layout(
-        title='Average Popularity by Country',
-        geo=dict(
-            showframe=False,
-            showcoastlines=False,
-            projection_type='natural earth'
-        ),
-        annotations=[dict(
-            x=0.5,
-            y=0.95,
-            xref='paper',
-            yref='paper',
-            text='Average Popularity by Country',
-            showarrow=False,
-            font=dict(size=16)
-        )]
+        title={
+            'text': 'Average Popularity by Country',
+            'x': 0.5,  # Set x position to the middle of the graph
+            'xanchor': 'center',  # Anchor the x position to the center
+            'yanchor': 'top'  # Position the title at the top
+        }
     )
 
     # Display the figure in Streamlit
