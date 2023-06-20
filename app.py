@@ -331,7 +331,12 @@ def map_vis(map_data):
     )
 
     # Display the figure in Streamlit
-    st.plotly_chart(fig)
+    col1, col2 = st.columns([1,16])
+    with col1:
+        st.write("")
+    with col2:
+        st.plotly_chart(fig)
+        
 
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
