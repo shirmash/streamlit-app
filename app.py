@@ -40,10 +40,11 @@ def first_vis(data):
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     traces = []
     # Iterate over the year ranges
-    for range_index, (start, end) in enumerate(year_ranges):
+     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
-
+        # Retrieve the 'song' and 'artist' values from the original dataset
+        range_song_artist = data.loc[range_data.index, ['song', 'artist']]
         # Create a scatter trace for each year range
         trace = go.Scatter(
             x=range_data[selected_feature],
@@ -51,9 +52,8 @@ def first_vis(data):
             mode='markers',
             marker=dict(color=colors[range_index]),
             name=range_label,
-            text = range_data['song'].astype(str) + ' - ' + range_data['artist'].astype(str)
+            text=range_song_artist['song'] + ' - ' + range_song_artist['artist']  # Set the text for hover tooltip
         )
-
     traces.append(trace)
     layout = go.Layout(
     title={
