@@ -146,8 +146,8 @@ def third_vis(data):
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences in the features between popular songs from different years? ")
-st.write("Explore the change in different features in Spotify's most popular songs over the years. Each line represents the average normalized value of a specific feature over the years. To focus on songs within a specific popularity range, you can use the slider to select the desired range. The graph will display the average feature values for songs falling within the selected popularity range.")
-st.write(" To view all the features together, simply choose the 'All' option from the dropdown menu. This allows you to compare how different features evolve over time. Additionally, you have the flexibility to temporarily remove a specific feature from the graph by clicking on its name.")
+st.write("Explore the impact of different features on the popularity of songs.  Each dot represents a song. To focus on songs within a specific range of the chosen feature , you can use the slider.)
+st.write(" you have the flexibility to temporarily remove one or more year range from the graph by clicking on its name.")
 first_vis(data)
 st.header('What are the characteristics that have the strongest influence on the popularity of a song? ')
 st.write("This visualization displays the average popularity of songs in different countries.Each country on the map is color-coded to reflect the average popularity of songs in that region. Warm colors like red indicate lower popularity, while cool colors like blue represent higher popularity. By hovering over a country, you can uncover its specific average popularity value, gaining insights into the musical preferences of different regions.Feel free to move around by dragging the map and use the zoom controls to get a closer look at specific areas of interest.")
