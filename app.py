@@ -287,7 +287,7 @@ def third_vis(data):
     for bar, visibility in zip(bars, visible_column):
         bar.visible = visibility
         
-     layout = go.Layout(
+    layout = go.Layout(
         barmode='stack',  # Set the barmode to 'stack' for stacked bars
         xaxis_title='Year',
         yaxis_title='Average Popularity',
