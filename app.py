@@ -50,17 +50,21 @@ def first_vis(data):
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
     # Add a new column for the categorical color based on year range
-    filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=False, right=False)
+    # Add a new column for the categorical color based on year range
+    filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[i for i, _ in enumerate(year_ranges)], right=False)
     
     # Update the scatter plot to use the categorical color
     fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year_range',
                      title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
-                     color_discrete_sequence=[color_map[range_start] for (range_start, _) in year_ranges])
-    col1, col2 = st.columns([1,16])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
+                 color_discrete_sequence=colors, category_orders={'year_range': [i for i, _ in enumerate(year_ranges)]})
+    # Customize the legend
+    fig.update_traces(showlegend=True)
+    fig.update_layout(legend_title_text='Year Range')
+        col1, col2 = st.columns([1,16])
+        with col1:
+            st.write("")
+        with col2:
+            st.plotly_chart(fig)
 
 
 # def first_vis(data):
