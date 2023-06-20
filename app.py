@@ -133,14 +133,10 @@ def third_vis(data):
         yaxis_title='Average Popularity',
         showlegend=False,)    
     fig = go.Figure(data=bars, layout=layout)
-    fig.update_layout(
-        width=900,  # Set the width of the chart
-        height=500,  # Set the height of the chart
+    fig.update_layout(width=900,  height=500, 
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
-            'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.85  # Set the title position slightly below the top vertically}))
-    # Display the figure in Streamlit
+            'x': 0.3, 'y': 0.85 })
     col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
