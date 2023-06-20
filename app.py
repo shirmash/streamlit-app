@@ -297,7 +297,7 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.95# Set the title position slightly below the top vertically
+            'y': 0.85# Set the title position slightly below the top vertically
         }
     )
 
