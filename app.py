@@ -20,7 +20,7 @@ st.title('Visualization: Final Project')
 
 # Load the data
 data = pd.read_csv('songs_normalize.csv')
-
+artists= pd.read_csv('artists.csv')
 def first_vis(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit','genre'], axis=1)
@@ -247,174 +247,7 @@ def second_vis_alt(data):
     )
 
     st.plotly_chart(fig)
-# def second_vis_alt(data):
-#     # Preprocess the data
-#     data = data.copy()
-#     la = LabelEncoder()
-#     label = la.fit_transform(data["genre"])
-#     data["genre"] = label
-#     data.drop(["artist", "song"], axis=1, inplace=True)
 
-#     # Define the year ranges for the facets
-#     year_ranges = [(1998, 2004), (2005, 2010), (2011, 2016), (2017, 2020)]
-
-#     # Dropdown menu for feature selection
-#     feature_names = data.columns.tolist()
-#     feature_dropdown = st.selectbox("Feature:", feature_names)
-
-#     # Create a figure with subplots for each facet
-#     fig = make_subplots(rows=2, cols=2, subplot_titles=[f"{start}-{end}" for start, end in year_ranges])
-
-#     # Iterate over the year ranges and create the facets
-#     for i, (start_year, end_year) in enumerate(year_ranges):
-#         facet_data = data[(data['year'] >= start_year) & (data['year'] <= end_year)]
-
-#         # Calculate average feature values for each popularity range in the facet
-#         popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-#                              range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-
-#         feature_avg_values = []
-#         for popularity_range in reversed(popularity_ranges):
-#             avg_value = facet_data[facet_data['popularity'].isin(popularity_range)][feature_dropdown].mean()
-#             feature_avg_values.append(avg_value)
-
-#         sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-#         # Normalize the feature average values between a small positive value and 1
-#         min_value = min(feature_avg_values)
-#         max_value = max(feature_avg_values)
-#         normalized_values = [0.01 + (value - min_value) / (max_value - min_value) * 0.99 for value in feature_avg_values]
-
-#         # Create the bar chart using go.Bar and add it to the corresponding subplot
-#         row = i // 2 + 1
-#         col = i % 2 + 1
-#         fig.add_trace(go.Bar(
-#             x=normalized_values,
-#             y=sorted_popularities,
-#             orientation='h',
-#             marker=dict(
-#                 color='rgb(63, 81, 181)',  # Specify the bar color
-#                 line=dict(
-#                     color='rgb(40, 55, 71)',  # Specify the bar border color
-#                     width=1.5  # Specify the bar border width
-#                 )
-#             ),
-#             opacity=0.8  # Specify the bar opacity
-#         ), row=row, col=col)
-
-#         # Set the title for each facet
-#         fig.update_xaxes(title_text='Average Normalized Value', row=row, col=col)
-#         fig.update_yaxes(title_text='Popularity range', row=row, col=col)
-
-#     # Update layout for the overall figure
-#     fig.update_layout(
-#         height=600,
-#         width=800,
-#         showlegend=False,
-#         title=f"Average Feature Values by Popularity Range for {feature_dropdown}"
-#     )
-
-#     # Display the graph using st.plotly_chart
-#     st.plotly_chart(fig)
-
-#     Display the graph using st.plotl
-# def second_vis_alt(data):
-#     # Preprocess the data
-#     data = data.copy()
-#     la = LabelEncoder()
-#     label = la.fit_transform(data["genre"])
-#     data["genre"] = label
-#     data.drop(["artist", "song"], axis=1, inplace=True)
-#     # Split the data into train and test sets
-#     x = data.drop(["popularity", 'year'], axis=1)
-
-#     # Extract feature names from the original dataset or use x.columns
-#     feature_names = x.columns.tolist()
-
-#     # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-#     feature_dropdown = st.selectbox("Feature:",
-#                                     [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
-
-#     # Calculate average feature values for each popularity range
-#     popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-#                          range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
-
-#     feature_avg_values = []
-#     for popularity_range in reversed(popularity_ranges):
-#         avg_value = np.mean(data[data['popularity'].isin(popularity_range)][feature_dropdown])
-#         feature_avg_values.append(avg_value)
-
-#     sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-#     # Normalize the feature average values between a small positive value and 1
-#     min_value = np.min(feature_avg_values)
-#     max_value = np.max(feature_avg_values)
-#     if min_value != max_value:
-#         normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
-#     else:
-#         normalized_values = feature_avg_values
-
-#     # Create the bar chart using go.Bar and go.Figure
-#     fig = go.Figure(data=go.Bar(
-#         x=normalized_values,
-#         y=sorted_popularities,
-#         orientation='h',
-#         marker=dict(
-#             color='rgb(63, 81, 181)',  # Specify the bar color
-#             line=dict(
-#                 color='rgb(40, 55, 71)',  # Specify the bar border color
-#                 width=1.5  # Specify the bar border width
-#             )
-#         ),
-#         opacity=0.8  # Specify the bar opacity
-#     ))
-#     fig.update_layout(
-#         yaxis_title='Popularity range',
-#         xaxis_title='Average Normalized Value',
-#         title={
-#             'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-#             'y': 0.9,  # Adjust the y-coordinate to center the title
-#             'x': 0.5,  # Set the x-coordinate to the center of the graph
-#             'xanchor': 'center',
-#             'yanchor': 'top'
-#         },
-#         yaxis=dict(
-#             tickfont=dict(size=10),
-#             gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-#         ),
-#         xaxis=dict(
-#             tickfont=dict(size=10),
-#             gridcolor='rgb(238, 238, 238)'  # Specify the grid color
-#         ),
-#         width=900,  # Set the width of the chart
-#         height=500,
-#         plot_bgcolor='rgb(255, 255, 255)',  # Specify the plot background color
-#         paper_bgcolor='rgb(255, 255, 255)',  # Specify the paper background color
-#     )
-
-#     # Display the graph using st.plotly_chart
-#     col1, col2 = st.columns([1, 16])
-#     with col1:
-#         st.write("")
-#     with col2:
-#         st.plotly_chart(fig)
-
-# def display_side_by_side(data):
-#     # Create two columns for side-by-side display
-#     col1, col2 = st.columns(2)
-
-#     # Display the first graph in the first column
-#     with col1:
-#         fig1 = second_vis(data, key_suffix="_1")
-#         st.pyplot(fig1)
-
-#     # Display the second graph in the second column
-#     with col2:
-#         fig2 = second_vis(data, key_suffix="_2")
-#         st.pyplot(fig2)
-
-# # Set the default Plotly renderer to be 'iframe' for better rendering in Streamlit
-# pio.renderers.default = 'iframe'
 def third_vis(data):
     data = data.copy()
     # Drop rows with missing genre values
@@ -476,81 +309,32 @@ def third_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-
         
-def second_vis_alt1(data):
-    # Preprocess the data
-    data = data.copy()
-    la = LabelEncoder()
-    label = la.fit_transform(data["genre"])
-    data["genre"] = label
-    data.drop(["artist", "song"], axis=1, inplace=True)
-    # Split the data into train and test sets
-    x = data.drop(["popularity", 'year'], axis=1)
+def map_vis(songs_normalize, data):
+    columns_to_keep = ['artist_mb', 'country_mb']
+    artist_region = data[columns_to_keep]
 
-    # Extract feature names from the original dataset or use x.columns
-    feature_names = x.columns.tolist()
+    songs_normalize['Country'] = [None] * len(songs_normalize)
+    for index, row in songs_normalize.iterrows():
+        common_value1 = row['artist']
+        # Check if the common value exists in artist_region
+        if artist_region['artist_mb'].isin([common_value1]).any():
+            region_value = artist_region.loc[artist_region['artist_mb'] == common_value1, 'country_mb']
+            songs_normalize.loc[index, 'Country'] = region_value.values[0]
+    
+    avg_popularity = songs_normalize.groupby(['Country'])['popularity'].mean().reset_index()
+    avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
 
-    # Exclude 'year', 'popularity', and 'genre' features from the dropdown menu
-    feature_dropdown = st.selectbox("Feature1:",
-                                    [col for col in feature_names if col not in ['year', 'popularity', 'genre']])
+    # Create the choropleth map using plotly express
+    fig = px.choropleth(avg_popularity, locations='Country', locationmode='country names',
+                        color='popularity', color_continuous_scale='RdYlBu',
+                        labels={'value': 'Average Popularity'}, title='Average Popularity by Country', projection="natural earth")
 
-    # Calculate average feature values for each popularity range
-    popularity_ranges = [range(89, 79, -1), range(79, 69, -1), range(69, 59, -1), range(59, 49, -1),
-                         range(49, 39, -1), range(39, 29, -1), range(29, 19, -1), range(19, 9, -1), range(9, 0, -1)]
+    fig.update_layout(coloraxis_colorbar=dict(title='Average Popularity'))
+    # Display the graph
+    st.plotly_chart(fig)
 
-    feature_avg_values = []
-    for popularity_range in reversed(popularity_ranges):
-        avg_value = np.mean(data[data['popularity'].isin(popularity_range)][feature_dropdown])
-        feature_avg_values.append(avg_value)
 
-    sorted_popularities = [f"{range.stop}-{range.start - 1}" for range in reversed(popularity_ranges)]
-
-    min_value = np.min(feature_avg_values)
-    max_value = np.max(feature_avg_values)
-    if min_value != max_value:
-        normalized_values = 0.01 + (feature_avg_values - min_value) / (max_value - min_value) * 0.99
-    else:
-        normalized_values = feature_avg_values
-
-    # Create a DataFrame with the normalized average feature values
-    df_avg_values = pd.DataFrame({feature_dropdown: normalized_values, 'Popularity Range': sorted_popularities})
-
-    # Create a radar chart
-    categories = df_avg_values['Popularity Range']
-    values = df_avg_values[feature_dropdown].tolist()
-
-    fig = go.Figure(data=go.Scatterpolar(
-        r=values,
-        theta=categories,
-        fill='toself',
-        marker=dict(color='rgb(63, 81, 181)')
-    ))
-
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 1]
-            )
-        ),
-        showlegend=False,
-        title={
-            'text': f"Average Feature Values by Popularity Range for {feature_dropdown}",
-            'y': 0.9,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        }
-    )
-
-    # Display the radar chart
-    col1, col2 = st.columns([1, 16])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
-        
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences between popular songs from different years? ")
 st.write("Explore the change in diffrent features in spotify most popular songs over the years. Each line represents the average value of a specific feature over the years. You can select individual features to see their trends over time by clicking on their names in the legend. To see all the features together, simply choose the 'All' option from the dropdown menu. You can also temporarily remove a feature from the graph by clicking on its name.")
@@ -560,7 +344,7 @@ st.write("Explore the factors that shape a song's popularity. By selecting diffe
 st.write(" A positive SHAP value suggests that as a feature's value increases, it tends to increase the song's popularity. On the other hand, a negative SHAP value indicates that as a feature's value increases, it may have a diminishing effect on the song's popularity.For instance, take the feature 'duration_ms'  that is shown below as an example. As the duration of the song increases, it may have a negative impact on the song's popularity. ")
 second_vis(data)
 second_vis_alt(data)
-second_vis_alt1(data)
+map_vis(data,artists)
 st.header('How has the popularity of different genres changed over time?')
 st.write("Explore the popularity of different music genres over the years. The graph displays the average popularity of the selected genre across different years. The height of each bar represents the popularity level, where higher values indicate greater popularity.")
 third_vis(data)
