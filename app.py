@@ -37,13 +37,18 @@ def first_vis(data):
     avg_popularity = data.groupby('year')[[selected_feature, 'popularity']].mean().reset_index()
 
     # Create a range slider for x-axis range
-    x_min, x_max = st.slider('Select Feature Range:', 0.0, 1.0, (0.0, 1.0))
+    x_min, x_max = st.slider('Select X-axis Range:', 0.0, 1.0, (0.0, 1.0))
+
+    # Update the x-axis range based on the slider selection
+    fig = px.scatter(avg_popularity, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
+    fig.update_xaxes(range=[x_min, x_max])
 
     # Filter the data based on the selected x-axis range
     filtered_data = avg_popularity[(avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
 
     # Create a scatter plot
-    fig = px.scatter(filtered_data, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
+    fig.add_trace(go.Scatter(x=filtered_data[selected_feature], y=filtered_data['popularity'], mode='markers', name='Filtered Data'))
+
     st.plotly_chart(fig)
 
 # def first_vis(data):
