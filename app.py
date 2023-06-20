@@ -78,7 +78,7 @@ def first_vis(data):
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
-        legend=dict(title='Year Range', labels=legend_labels),  # Set the legend labels
+        legend=dict(title='Year Range'),  # Set the legend labels
         annotations=[
             dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
                  showarrow=False, font=dict(size=13))
