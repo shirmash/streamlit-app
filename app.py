@@ -108,7 +108,8 @@ def first_vis_alt(data):
     # Select feature using Streamlit
     select_feature = st.selectbox('Choose feature :', features_names)
 
-    fig = px.scatter(songs_normalize, x=select_feature, y='popularity', title=f'Popularity by {select_feature} and Year', width=900, height=500)
+    fig = px.scatter(songs_normalize, x=select_feature, y='popularity', color='year', title=f'Popularity by {select_feature} and Year', width=900, height=500,
+                     color_continuous_scale='viridis', color_continuous_midpoint=data['year'].median())
 
     # Update the layout
     fig.update_layout(
