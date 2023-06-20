@@ -109,7 +109,7 @@ def first_vis_alt(data):
     features_names = [item for item in column_names if item not in features_to_remove]
 
     # Select feature using Streamlit
-    select_feature = st.selectbox('Choose feature:', features_names)
+    select_feature = st.selectbox('Choose feature 1:', features_names)
 
     fig = px.scatter(songs_normalize, x='popularity', y=select_feature, title=f'{select_feature} by Popularity', width=900, height=500)
     
