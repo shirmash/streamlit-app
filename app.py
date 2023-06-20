@@ -74,15 +74,15 @@ def first_vis(data):
         traces.append(trace)
     
         layout = go.Layout(
-        title=f"Feature: {selected_feature} popularity",
+        title=f"{selected_feature} popularity",
         xaxis_title=selected_feature,
         yaxis_title='Popularity',
         showlegend=True,
         legend=dict(title='Year Range'),
         annotations=[
             dict(
-                x=1.1,
-                y=0.55,
+                x=1.05,
+                y=0.65,
                 xref="paper",
                 yref="paper",
                 xanchor="center",
