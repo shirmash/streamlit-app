@@ -302,8 +302,9 @@ def third_vis(data):
     )
 
     # Set the visibility of the bars based on the selected genre
-    visible_column = [column == select_genre for column in genres]
+    visible_column = ['legendonly' if column == select_genre else False for column in genres]
     fig.update_traces(visible=visible_column)  # Update the visibility of the bars
+
 
     # Display the figure in Streamlit
     col1, col2 = st.columns([1, 16])
