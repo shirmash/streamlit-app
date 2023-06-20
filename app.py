@@ -50,7 +50,6 @@ def first_vis(data):
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
     # Add a new column for the categorical color based on year range
-    # Add a new column for the categorical color based on year range
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     
     # Get the selected year ranges from the user
@@ -60,16 +59,19 @@ def first_vis(data):
     filtered_data = filtered_data[filtered_data['year_range'].isin(selected_ranges)]
     
     # Update the scatter plot to use the categorical color
-    fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year_range',
-                     title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
-                     color_discrete_sequence=colors, category_orders={'year_range': [f'{start}-{end}' for (start, end) in year_ranges]})
+    fig = go.Figure()
     
-    # Customize the legend
-    fig.update_traces(showlegend=True)
-    fig.update_layout(legend_title_text='Year Range')
+    for range_index, (start, end) in enumerate(year_ranges):
+        range_label = f'{start}-{end}'
+        if range_label in selected_ranges:
+            range_data = filtered_data[filtered_data['year_range'] == range_label]
+            fig.add_trace(go.Scatter(x=range_data[selected_feature], y=range_data['popularity'], mode='markers',
+                                     marker=dict(color=colors[range_index]), name=range_label))
     
-    # Enable interactive legend filtering
-    fig.update_layout(legend=dict(itemclick="toggleothers"))
+    # Customize the layout
+    fig.update_layout(title=f"Feature: {selected_feature} vs Popularity", xaxis_title=selected_feature, yaxis_title='Popularity')
+    
+    # Show the plot
     col1, col2 = st.columns([1,16])
     with col1:
         st.write("")
