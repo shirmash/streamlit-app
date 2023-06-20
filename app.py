@@ -52,24 +52,38 @@ def first_vis(data):
     # Add a new column for the categorical color based on year range
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     
-    # Get the selected year ranges from the user
-    selected_ranges = st.multiselect('Select Year Ranges:', [f'{start}-{end}' for (start, end) in year_ranges])
+    # Create an empty list to store the traces
+    traces = []
     
-    # Filter the data based on the selected year ranges
-    filtered_data = filtered_data[filtered_data['year_range'].isin(selected_ranges)]
-    
-    # Update the scatter plot to use the categorical color
-    fig = go.Figure()
-    
+    # Iterate over the year ranges
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
-        if range_label in selected_ranges:
-            range_data = filtered_data[filtered_data['year_range'] == range_label]
-            fig.add_trace(go.Scatter(x=range_data[selected_feature], y=range_data['popularity'], mode='markers',
-                                     marker=dict(color=colors[range_index]), name=range_label))
+        range_data = filtered_data[filtered_data['year_range'] == range_label]
+        
+        # Create a scatter trace for each year range
+        trace = go.Scatter(
+            x=range_data[selected_feature],
+            y=range_data['popularity'],
+            mode='markers',
+            marker=dict(color=colors[range_index]),
+            name=range_label
+        )
+        
+        # Add the trace to the list
+        traces.append(trace)
     
-    # Customize the layout
-    fig.update_layout(title=f"Feature: {selected_feature} vs Popularity", xaxis_title=selected_feature, yaxis_title='Popularity')
+    # Create the layout
+    layout = go.Layout(
+        title=f"Feature: {selected_feature} vs Popularity",
+        xaxis_title=selected_feature,
+        yaxis_title='Popularity',
+        showlegend=True,
+        legend=dict(title='Year Range')
+    )
+    
+    # Create the figure
+    fig = go.Figure(data=traces, layout=layout)
+
     
     # Show the plot
     col1, col2 = st.columns([1,16])
