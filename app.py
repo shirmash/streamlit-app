@@ -92,8 +92,6 @@ def first_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-
-
 def first_vis_alt(data):
     songs_normalize = data.copy()
     songs_normalize = songs_normalize.drop(['explicit', 'genre'], axis=1)
