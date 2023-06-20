@@ -145,7 +145,7 @@ def third_vis(data):
         st.plotly_chart(fig)
     
 
-st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
+st.header('What are the trends and patterns in popular music from 1999 to 2020, based on the Top Hits Spotify dataset?')
 st.subheader("How does the value of a feature influence the popularity of songs across different time periods?")
 st.write("Discover how different features influence the popularity of songs. Each data point represents a song. Use the slider to narrow down the songs within a specific range of the selected feature, gaining insights into their trends.")
 st.write("To further refine your analysis, simply click on the name of a year range in the legend to temporarily remove it from the graph. This enables you to focus on specific periods of interest. In addition you can hover over a data point to see the name of the song and the artist.")
