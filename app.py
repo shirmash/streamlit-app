@@ -100,19 +100,18 @@ def first_vis_alt(data):
     scaler = MinMaxScaler()
     songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])] = scaler.fit_transform(songs_normalize[songs_normalize.columns.difference(['artist','song', 'year','genre','popularity'])])
 
-    def map_to_range(value):
-        return str(value)
-            
-    songs_normalize['PopularityRange'] = songs_normalize['popularity'].apply(map_to_range)
     # Get the columns names and save only the relevant ones
     songs_normalize = songs_normalize.drop('popularity', axis=1)
     
     # Get the feature names
     column_names = list(songs_normalize.columns.values)
-    features_to_remove = ['song', 'artist','genre', 'year','PopularityRange']
+    features_to_remove = ['song', 'artist','genre', 'year']
     features_names = [item for item in column_names if item not in features_to_remove]
 
-    fig = px.scatter(songs_normalize, x='PopularityRange', y=select_feature, title=f'{select_feature} by Popularity', width=900, height=500)
+    # Select feature using Streamlit
+    select_feature = st.selectbox('Choose feature:', features_names)
+
+    fig = px.scatter(songs_normalize, x='popularity', y=select_feature, title=f'{select_feature} by Popularity', width=900, height=500)
     
     # Update the layout
     fig.update_layout(
@@ -131,7 +130,6 @@ def first_vis_alt(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-
 def second_vis(data):
     # Preprocess the data
     data = data.copy()
