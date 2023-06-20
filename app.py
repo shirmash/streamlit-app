@@ -101,6 +101,8 @@ def third_vis(data):
     data['genre'] = data['genre'].str.split(',')
     # Remove leading/trailing whitespace from each genre
     data['genre'] = data['genre'].apply(lambda genres: [genre.strip() for genre in genres])
+    # Remove 'classical' and 'jazz' genres
+    data['genre'] = data['genre'].apply(lambda genres: [genre for genre in genres if genre not in ['classical', 'jazz']])
     df_songs_genres = pd.DataFrame.from_records(data, columns=['year', 'popularity', 'genre'])
     df_songs_genres = df_songs_genres.explode('genre').reset_index(drop=True)
     avg_popularity_genre = df_songs_genres.groupby(['year', 'genre'])['popularity'].mean().reset_index()
@@ -109,8 +111,6 @@ def third_vis(data):
     bars = []
     genres = []
     for column in avg_popularity_genre.columns:
-        if column != 'classical' and column != 'jazz':
-            if column != 'set()':
                 bar = go.Bar(
                     x=avg_popularity_genre.index,
                     y=avg_popularity_genre[column],
