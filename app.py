@@ -33,23 +33,19 @@ def first_vis(data):
     non_numeric_columns = data.select_dtypes(include=['object']).columns
     data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
-
     st.title("Feature Analysis")
 
     selected_feature = st.selectbox("Select Feature:", features_names)
 
-    feature_min = round(avg_popularity[selected_feature].min(), 2)
-    feature_max = round(avg_popularity[selected_feature].max(), 2)
+    feature_min = round(data[selected_feature].min(), 2)
+    feature_max = round(data[selected_feature].max(), 2)
     x_min, x_max = st.slider('Select X-axis Range:', float(feature_min), float(feature_max), (float(feature_min), float(feature_max)))
 
-    filtered_data = avg_popularity[
-        (avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
+    filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
 
     fig = px.scatter(filtered_data, x=selected_feature, y='popularity', color='year',
                      title=f"Feature: {selected_feature} vs Popularity", labels={'year': 'Year'},
-                     color_continuous_scale='viridis', range_color=[avg_popularity['year'].min(),
-                                                                     avg_popularity['year'].max()])
+                     color_continuous_scale='viridis', range_color=[data['year'].min(), data['year'].max()])
     fig.update_layout(xaxis_title=selected_feature, yaxis_title='Popularity')
     st.plotly_chart(fig)
 
