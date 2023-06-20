@@ -16,7 +16,7 @@ st.set_page_config(layout="wide",page_title="Spotify Music Insights")
 data = pd.read_csv('songs_normalize.csv')
 map_data = pd.read_csv('map_data.csv')
 # Display the Spotify logo image
-st.image("spotify.png", width=170)
+st.image("Spotify_Logo.png", width=170)
 st.title('Visualization: Final Project')
 
 def first_vis(data):
