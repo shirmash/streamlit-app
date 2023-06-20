@@ -64,11 +64,21 @@ def first_vis(data):
 
     fig = go.Figure(data=traces, layout=layout)
     fig.update_layout(width=900, height=500)  # Set the height and width of the chart
-    col1, col2 = st.columns([1, 16])  # place graph in middle of the page
+    container = st.container()
+expander = container.expander()
+
+with expander:
+    col1, col2, col3 = st.columns([1, 6, 1])
+
     with col1:
         st.write("")
+
     with col2:
+        # Place your plotly_chart code here
         st.plotly_chart(fig)
+
+    with col3:
+        st.write("")
 
 def second_vis(map_data):
     avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
