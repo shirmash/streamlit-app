@@ -23,26 +23,27 @@ map_data= pd.read_csv('map_data.csv')
 
 def first_vis(data):
     songs_popular = data.copy()
-    
+
     # Filter songs by popularity range
     popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(0, 89))
     songs_popular = songs_popular[(songs_popular['popularity'] >= popularity_range[0]) & (songs_popular['popularity'] <= popularity_range[1])]
-    
+
     # Get the column names and save only the relevant ones
     column_names = list(songs_popular.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
-    
+
     # Convert non-numeric columns to numeric
     non_numeric_columns = songs_popular.select_dtypes(exclude=np.number).columns
     songs_popular[non_numeric_columns] = songs_popular[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-    
+
     # Normalize the features
     scaler = MinMaxScaler()
     songs_popular[features_names] = scaler.fit_transform(songs_popular[features_names])
-    
+
     avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
-    avg_popularity[features_names]=avg_popularity[features_names].round(2)
+    avg_popularity[features_names] = avg_popularity[features_names].round(2)
+
     # Create the lines for the plot
     lines = []
     for column in avg_popularity.columns:
@@ -81,7 +82,7 @@ def first_vis(data):
                         args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
                     )
                 ]),
-                direction='down', # the position of the dropdown
+                direction='down',  # the position of the dropdown
                 showactive=True,
                 x=1.1,
                 xanchor='right',
@@ -97,9 +98,89 @@ def first_vis(data):
         width=1000,  # Set the width of the chart
         height=600,  # Set the height of the chart
     )
-    
+
     # Display the figure
     st.plotly_chart(fig)
+
+# def first_vis(data):
+#     songs_popular = data.copy()
+    
+#     # Filter songs by popularity range
+#     popularity_range = st.slider('Select Popularity Range', min_value=0, max_value=89, value=(0, 89))
+#     songs_popular = songs_popular[(songs_popular['popularity'] >= popularity_range[0]) & (songs_popular['popularity'] <= popularity_range[1])]
+    
+#     # Get the column names and save only the relevant ones
+#     column_names = list(songs_popular.columns.values)
+#     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
+#     features_names = [item for item in column_names if item not in features_to_remove]
+    
+#     # Convert non-numeric columns to numeric
+#     non_numeric_columns = songs_popular.select_dtypes(exclude=np.number).columns
+#     songs_popular[non_numeric_columns] = songs_popular[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+    
+#     # Normalize the features
+#     scaler = MinMaxScaler()
+#     songs_popular[features_names] = scaler.fit_transform(songs_popular[features_names])
+    
+#     avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
+#     avg_popularity[features_names]=avg_popularity[features_names].round(2)
+#     # Create the lines for the plot
+#     lines = []
+#     for column in avg_popularity.columns:
+#         if column != 'year':
+#             line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
+#             lines.append(line)
+
+#     # Create the layout with checklist dropdown
+#     layout = go.Layout(
+#         title='Average Feature Value per Year',
+#         title_x=0.3,  # Set the title position to the center
+#         title_y=0.9,  # Set the title position to the upper part
+#         xaxis_title='Year',
+#         yaxis_title='Average Normalized Value',
+#         legend=dict(
+#             title='Choose Features',
+#             title_font=dict(size=18),
+#         ),
+#         annotations=[
+#             dict(
+#                 x=1.16,
+#                 y=0.31,  # Adjust the y-coordinate to position the note below the legend
+#                 xref='paper',
+#                 yref='paper',
+#                 text='One click to remove the feature',
+#                 showarrow=False,
+#                 font=dict(size=10),
+#             )
+#         ],
+#         updatemenus=[  # the user can choose to see all features in one click
+#             dict(
+#                 buttons=list([
+#                     dict(
+#                         label='All',
+#                         method='update',
+#                         args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+#                     )
+#                 ]),
+#                 direction='down', # the position of the dropdown
+#                 showactive=True,
+#                 x=1.1,
+#                 xanchor='right',
+#                 y=1.15,
+#                 yanchor='top'
+#             )
+#         ]
+#     )
+
+#     # Create the figure
+#     fig = go.Figure(data=lines, layout=layout)
+#     fig.update_layout(
+#         width=1000,  # Set the width of the chart
+#         height=600,  # Set the height of the chart
+#     )
+    
+#     # Display the figure
+#     st.plotly_chart(fig)
 def third_vis(data):
     # Drop rows with missing genre values
     data.dropna(subset=['genre'], inplace=True)
