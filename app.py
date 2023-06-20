@@ -18,6 +18,7 @@ map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 
 def first_vis(data):
+    org_data =  data.copy()
     data = data.copy()
     data = data.drop(['explicit', 'genre'], axis=1)
     scaler = MinMaxScaler()
@@ -50,7 +51,7 @@ def first_vis(data):
             mode='markers',
             marker=dict(color=colors[range_index]),
             name=range_label,
-            text = range_data['song'].str.cat(range_data['artist'], sep=' - ')
+            text = range_data['song'].astype(str) + ' - ' + range_data['artist'].astype(str)
         )
 
     traces.append(trace)
