@@ -45,7 +45,7 @@ def first_vis(data):
     (2005, 2010), 
     (2011, 2015), 
     (2016, 2020)]
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Assign colors for each year range
+    colors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78'] # Assign colors for each year range
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
     filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
