@@ -311,17 +311,6 @@ def third_vis(data):
         st.plotly_chart(fig)
         
 def map_vis(songs_normalize, data):
-    columns_to_keep = ['artist_mb', 'country_mb']
-    artist_region = data[columns_to_keep]
-
-    songs_normalize['Country'] = [None] * len(songs_normalize)
-    for index, row in songs_normalize.iterrows():
-        common_value1 = row['artist']
-        # Check if the common value exists in artist_region
-        if artist_region['artist_mb'].isin([common_value1]).any():
-            region_value = artist_region.loc[artist_region['artist_mb'] == common_value1, 'country_mb']
-            songs_normalize.loc[index, 'Country'] = region_value.values[0]
-    
     avg_popularity = songs_normalize.groupby(['Country'])['popularity'].mean().reset_index()
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
 
