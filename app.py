@@ -260,9 +260,9 @@ def third_vis(data):
     
     # Remove leading/trailing whitespace from each genre
     data['genre'] = data['genre'].apply(lambda genres: [genre.strip() for genre in genres])
-    df_songs_genres = pd.DataFrame.from_records(data, columns=['year','popularity','genre'])
+    df_songs_genres = pd.DataFrame.from_records(data, columns=['year', 'popularity', 'genre'])
     df_songs_genres = df_songs_genres.explode('genre').reset_index(drop=True)
-    avg_popularity_genre = df_songs_genres.groupby(['year','genre'])['popularity'].mean().reset_index()
+    avg_popularity_genre = df_songs_genres.groupby(['year', 'genre'])['popularity'].mean().reset_index()
     avg_popularity_genre = avg_popularity_genre.pivot(index='year', columns='genre', values='popularity')
 
     # Create the bars for the plot
@@ -274,7 +274,8 @@ def third_vis(data):
                 x=avg_popularity_genre.index,
                 y=avg_popularity_genre[column],
                 name=column,
-               marker=dict(color='orange'))
+                marker=dict(color='orange')
+            )
             bars.append(bar)
             genres.append(column)
 
@@ -296,14 +297,13 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.85# Set the title position slightly below the top vertically
+            'y': 0.85  # Set the title position slightly below the top vertically
         }
     )
 
     # Set the visibility of the bars based on the selected genre
     visible_column = [column == select_genre for column in genres]
-    for bar, visibility in zip(bars, visible_column):
-        bar.visible = visibility
+    fig.update_traces(visible=visible_column)  # Update the visibility of the bars
 
     # Display the figure in Streamlit
     col1, col2 = st.columns([1, 16])
@@ -311,7 +311,6 @@ def third_vis(data):
         st.write("")
     with col2:
         st.plotly_chart(fig)
-
 def map_vis(map_data):
     avg_popularity = map_data.groupby(['Country'])['popularity'].mean().reset_index()
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
