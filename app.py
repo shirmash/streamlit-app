@@ -37,9 +37,8 @@ def first_vis(data):
     avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
 
     st.title('Song Popularity Visualization')
-    st.sidebar.title('Select Range')
 
-    x_min, x_max = st.sidebar.slider('Select x-range', min_value=0.0, max_value=1.0, value=(0.0, 1.0), step=0.01)
+    x_min, x_max = st.slider('Select x-range', min_value=0.0, max_value=1.0, value=(0.0, 1.0), step=0.01)
 
     filtered_data = avg_popularity[(avg_popularity['average'] >= x_min) & (avg_popularity['average'] <= x_max)]
 
@@ -49,6 +48,7 @@ def first_vis(data):
                            yaxis=dict(title=column), showlegend=True)
         fig = go.Figure(data=[line], layout=layout)
         st.plotly_chart(fig)
+
 
 # def first_vis(data):
 #     songs_popular = data.copy()
