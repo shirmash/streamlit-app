@@ -316,24 +316,37 @@ def map_vis(map_data):
     avg_popularity['popularity'] = avg_popularity['popularity'].round(2)
 
     # Create the choropleth map using plotly express
-    fig = px.choropleth(avg_popularity, locations='Country', locationmode='country names',
-                        color='popularity', color_continuous_scale='RdYlBu',
-                        labels={'value': 'Average Popularity'}, title='Average Popularity by Country', projection="natural earth")
-    # Display the graph
+    fig = go.Figure(data=go.Choropleth(
+        locations=avg_popularity['Country'],
+        locationmode='country names',
+        z=avg_popularity['popularity'],
+        colorscale='RdYlBu',
+        colorbar=dict(title='Average Popularity'),
+        text=avg_popularity['Country'],
+        marker_line_color='white',
+        showscale=True
+    ))
+
     fig.update_layout(
-        coloraxis_colorbar=dict(title='Average Popularity'),
-        width=900,  # Set the width of the chart
-        height=500,  # Set the height of the chart
+        title='Average Popularity by Country',
+        geo=dict(
+            showframe=False,
+            showcoastlines=False,
+            projection_type='natural earth'
+        ),
+        annotations=[dict(
+            x=0.5,
+            y=0.95,
+            xref='paper',
+            yref='paper',
+            text='Average Popularity by Country',
+            showarrow=False,
+            font=dict(size=16)
+        )]
     )
-    
+
     # Display the figure in Streamlit
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col1:
-        st.write("")
-    with col2:
-        st.plotly_chart(fig)
-    with col3:
-        st.write("")
+    st.plotly_chart(fig)
 
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
