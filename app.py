@@ -25,7 +25,7 @@ def first_vis(data):
     data[data.columns.difference(['artist', 'song', 'year', 'explicit'])] = scaler.fit_transform(
         data[data.columns.difference(['artist', 'song', 'year', 'explicit'])])
 
-    # Get the columns names and save only the relevant ones
+    # Get the column names and save only the relevant ones
     column_names = list(data.columns.values)
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
@@ -36,20 +36,24 @@ def first_vis(data):
 
     avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
 
-    st.title('Song Popularity Visualization')
+    st.title('Popularity Visualization')
 
-    x_min, x_max = st.slider('Select x-range', min_value=0.0, max_value=1.0, value=(0.0, 1.0), step=0.01)
+    # Create a range slider for selecting x-axis range
+    x_min, x_max = st.slider("Select x-axis range", 0.0, 1.0, (0.0, 1.0))
 
-    filtered_data = avg_popularity[(avg_popularity['average'] >= x_min) & (avg_popularity['average'] <= x_max)]
+    # Filter data based on selected range
+    filtered_data = avg_popularity[(avg_popularity[features_names[0]] >= x_min) & (avg_popularity[features_names[0]] <= x_max)]
 
+    # Create scatter plot
+    fig = go.Figure()
     for column in features_names:
-        line = go.Scatter(x=filtered_data['average'], y=filtered_data[column], name=column, mode='markers')
-        layout = go.Layout(title='{} vs. Average Popularity'.format(column), xaxis=dict(title='Average Popularity'),
-                           yaxis=dict(title=column), showlegend=True)
-        fig = go.Figure(data=[line], layout=layout)
-        st.plotly_chart(fig)
+        fig.add_trace(go.Scatter(x=filtered_data[column], y=filtered_data['popularity'], name=column))
 
+    # Update layout
+    fig.update_layout(title='Popularity vs Normalized Feature', xaxis_title='Normalized Feature', yaxis_title='Popularity')
 
+    # Display the plot
+    st.plotly_chart(fig)
 # def first_vis(data):
 #     songs_popular = data.copy()
     
