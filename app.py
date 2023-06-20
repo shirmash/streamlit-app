@@ -139,7 +139,7 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.3,  # Set the title position to the middle horizontally
-            'y': 0.85  # Set the title position slightly below the top vertically} )
+            'y': 0.85  # Set the title position slightly below the top vertically}))
     # Display the figure in Streamlit
     col1, col2 = st.columns([1,16])
     with col1:
