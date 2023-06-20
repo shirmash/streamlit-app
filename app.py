@@ -18,59 +18,72 @@ map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
 
 def first_vis(data):
-    org_data =  data.copy()
     data = data.copy()
-    data = data.drop(['explicit', 'genre'], axis=1)
+
+    # Make a copy of the original data
+    range_data = data.copy()
+
+    # Drop columns
+    range_data = range_data.drop(['explicit', 'genre'], axis=1)
+
+    # Scale the data
     scaler = MinMaxScaler()
-    data[data.columns.difference(['artist', 'song', 'year', 'explicit','mode'])] = scaler.fit_transform(
-        data[data.columns.difference(['artist', 'song', 'year', 'explicit','mode'])])##scale
-    column_names = list(data.columns.values)
-    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity','mode']
+    range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])] = scaler.fit_transform(
+        range_data[range_data.columns.difference(['artist', 'song', 'year', 'explicit', 'mode'])])
+
+    column_names = list(range_data.columns.values)
+    features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity', 'mode']
     features_names = [item for item in column_names if item not in features_to_remove]
 
-    non_numeric_columns = data.select_dtypes(include=['object']).columns
-    data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
-    selected_feature = st.selectbox("Select Feature:", features_names)##dropdown
-    x_min, x_max = st.slider('select feature range:', 0, 1, (0,1))
-    year_ranges = [(1999, 2004),(2005, 2010), (2011, 2015), (2016, 2020)]
-    colors=['#d62728', '#F9564F','#2ca02c', '#98df8a']##colors for the year ranges
+    non_numeric_columns = range_data.select_dtypes(include=['object']).columns
+    range_data[non_numeric_columns] = range_data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
+
+    selected_feature = st.selectbox("Select Feature:", features_names)  # dropdown
+    x_min, x_max = st.slider('select feature range:', 0, 1, (0, 1))
+    year_ranges = [(1999, 2004), (2005, 2010), (2011, 2015), (2016, 2020)]
+    colors = ['#d62728', '#F9564F', '#2ca02c', '#98df8a']  # colors for the year ranges
     # Create a dictionary mapping year ranges to colors
     color_map = {range_start: color for (range_start, _), color in zip(year_ranges, colors)}
-    filtered_data = data[(data[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
-    filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
+    filtered_data = range_data[(range_data[selected_feature] >= x_min) & (range_data[selected_feature] <= x_max)]
+    filtered_data['year_range'] = pd.cut(filtered_data['year'],
+                                         bins=[range_start for (range_start, _) in year_ranges] + [
+                                             filtered_data['year'].max()],
+                                         labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     traces = []
     # Iterate over the year ranges
     for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
-        # Retrieve the 'song' and 'artist' values from the original dataset
-        range_song_artist = data.loc[range_data.index, ['song', 'artist']]
         # Create a scatter trace for each year range
         trace = go.Scatter(
             x=range_data[selected_feature],
             y=range_data['popularity'],
             mode='markers',
             marker=dict(color=colors[range_index]),
-            name=range_label,
-            text=range_song_artist['song'] + ' - ' + range_song_artist['artist']  # Set the text for hover tooltip
+            name=range_label
         )
-    traces.append(trace)
+        traces.append(trace)
+
     layout = go.Layout(
-    title={
-    'text': f"{selected_feature} Impact On Songs Popularity",
-    'x': 0.43,
-    'y': 0.9,
-    'xanchor': 'center',
-    'yanchor': 'top'
-    },
-    xaxis_title=selected_feature,
-    yaxis_title='Popularity',
-    showlegend=True,
-    legend=dict(title='Year Range'),
-    annotations=[
-    dict(x=1.08,y=0.65, xref="paper",yref="paper",xanchor="center",yanchor="bottom",text="One click to remove",showarrow=False,font=dict(size=13))])
+        title={
+            'text': f"{selected_feature} Impact On Songs Popularity",
+            'x': 0.43,
+            'y': 0.9,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        xaxis_title=selected_feature,
+        yaxis_title='Popularity',
+        showlegend=True,
+        legend=dict(title='Year Range'),
+        annotations=[
+            dict(x=1.08, y=0.65, xref="paper", yref="paper", xanchor="center", yanchor="bottom", text="One click to remove",
+                 showarrow=False, font=dict(size=13))]
+    )
+    
     fig = go.Figure(data=traces, layout=layout)
-    fig.update_layout(width=900,height=500)# Set the height and width of the chart
+    fig.update_layout(width=900, height=500)  # Set the height and width of the chart
+
     col1, col2 = st.columns([1,16])##place graph in middle of the page
     with col1:
         st.write("")
