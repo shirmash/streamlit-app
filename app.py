@@ -327,7 +327,11 @@ def map_vis(map_data):
             'x': 0.5,  # Set x position to the middle of the graph
             'xanchor': 'center',  # Anchor the x position to the center
             'yanchor': 'top'  # Position the title at the top
-        }
+        },     
+        width=900,  # Set the width of the chart
+        height=500,  # Set the height of the chart
+    )
+
     )
 
     # Display the figure in Streamlit
