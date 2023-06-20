@@ -281,15 +281,13 @@ def third_vis(data):
             genres.append(column)
 
     layout = go.Layout(
-        title='Popularity of Different Genres Over the Years',
-        barmode='stack',  # Set the barmode to 'stack' for stacked bars
-        title_xanchor='center',  # Set the title position to the center
-        title_y=0.9,  # Set the title position to the upper part
-        xaxis_title='Year',
-        yaxis_title='Average Popularity',
-        showlegend=False,
-    )
-
+    title='Popularity of Different Genres Over the Years',
+    barmode='stack',  # Set the barmode to 'stack' for stacked bars
+    title_x=0.5,  # Set the title position to the center horizontally
+    title_y=0.5,  # Set the title position to the center vertically
+    xaxis_title='Year',
+    yaxis_title='Average Popularity',
+    showlegend=False,)
     # Create the initial selectbox
     select_genre = st.selectbox('Choose genre:', genres)
 
