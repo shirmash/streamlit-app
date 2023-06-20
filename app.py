@@ -29,13 +29,13 @@ def first_vis(data):
     features_to_remove = ['song', 'explicit', 'artist', 'year', 'popularity']
     features_names = [item for item in column_names if item not in features_to_remove]
 
-    non_numeric_columns = data.select_dtypes(exclude=pd.core.dtypes.common.numeric).columns
+    non_numeric_columns = data.select_dtypes(include=['object']).columns
     data[non_numeric_columns] = data[non_numeric_columns].apply(pd.to_numeric, errors='coerce')
 
     avg_popularity = data.groupby(['year'], as_index=False)[features_names].mean()
 
     st.title("Feature Analysis")
-    
+
     selected_feature = st.selectbox("Select Feature:", features_names)
 
     feature_min = round(avg_popularity[selected_feature].min(), 2)
