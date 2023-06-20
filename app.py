@@ -48,16 +48,16 @@ def first_vis(data):
     lines = []
     for column in avg_popularity.columns:
         if column != 'year':
-            line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
+            line = go.Scatter(x=avg_popularity[column], y=avg_popularity['popularity'], name=column)
             lines.append(line)
 
     # Create the layout with checklist dropdown
     layout = go.Layout(
-        title='Average Feature Value per Year',
+        title='Average Popularity by Normalized Value',
         title_x=0.3,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
-        xaxis_title='Year',
-        yaxis_title='Average Normalized Value',
+        xaxis_title='Average Normalized Value',
+        yaxis_title='Popularity',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
@@ -79,7 +79,7 @@ def first_vis(data):
                     dict(
                         label='All',
                         method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Popularity by Normalized Value'}]
                     )
                 ]),
                 direction='down',  # the position of the dropdown
@@ -101,7 +101,6 @@ def first_vis(data):
 
     # Display the figure
     st.plotly_chart(fig)
-
 # def first_vis(data):
 #     songs_popular = data.copy()
     
