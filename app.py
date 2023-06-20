@@ -17,6 +17,7 @@ st.set_page_config(layout="wide",page_title="Spotify Music Insights")
 data = pd.read_csv('songs_normalize.csv')
 map_data = pd.read_csv('map_data.csv')
 st.title('Visualization: Final Project')
+
 def first_vis(data):
     data = data.copy()
     data = data.drop(['explicit', 'genre'], axis=1)
@@ -40,7 +41,7 @@ def first_vis(data):
 
     feature_min = round(avg_popularity[selected_feature].min(), 2)
     feature_max = round(avg_popularity[selected_feature].max(), 2)
-    x_min, x_max = st.slider('Select X-axis Range:', feature_min, feature_max, (feature_min, feature_max))
+    x_min, x_max = st.slider('Select X-axis Range:', float(feature_min), float(feature_max), (float(feature_min), float(feature_max)))
 
     filtered_data = avg_popularity[
         (avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
