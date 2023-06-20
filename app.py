@@ -61,10 +61,7 @@ def first_vis(data):
             mode='markers',
             marker=dict(color=colors[range_index]),
             name=range_label,
-            text=range_data['song'].astype(str) + ' - ' + range_data['artist'].astype(str),  # Set the text for hover tooltip
-            hovertemplate='%{text}<br>' +
-                          f'{selected_feature}: ' + '%{x}<br>' +
-                          'Popularity: ' + '%{y}<br>',  # Customize hover tooltip format
+            text=data['song'].astype(str) + ' - ' +data['artist'].astype(str),  # Set the text for hover tooltip
         )
         traces.append(trace)
 
