@@ -40,7 +40,7 @@ def first_vis(data):
     filtered_data['year_range'] = pd.cut(filtered_data['year'], bins=[range_start for (range_start, _) in year_ranges] + [filtered_data['year'].max()], labels=[f'{start}-{end}' for (start, end) in year_ranges], right=False)
     traces = []
     # Iterate over the year ranges
-     for range_index, (start, end) in enumerate(year_ranges):
+    for range_index, (start, end) in enumerate(year_ranges):
         range_label = f'{start}-{end}'
         range_data = filtered_data[filtered_data['year_range'] == range_label]
         # Retrieve the 'song' and 'artist' values from the original dataset
