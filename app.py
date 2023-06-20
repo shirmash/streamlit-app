@@ -20,7 +20,6 @@ st.title('Visualization: Final Project')
 # Load the data
 data = pd.read_csv('songs_normalize.csv')
 map_data= pd.read_csv('map_data.csv')
-
 def first_vis(data):
     songs_popular = data.copy()
 
@@ -41,23 +40,23 @@ def first_vis(data):
     scaler = MinMaxScaler()
     songs_popular[features_names] = scaler.fit_transform(songs_popular[features_names])
 
-    avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names + ['popularity']].mean()
+    avg_popularity = songs_popular.groupby(['year'], as_index=False)[features_names].mean()
     avg_popularity[features_names] = avg_popularity[features_names].round(2)
 
     # Create the lines for the plot
     lines = []
     for column in avg_popularity.columns:
         if column != 'year':
-            line = go.Scatter(x=avg_popularity[column], y=avg_popularity['popularity'], name=column)
+            line = go.Scatter(x=avg_popularity['year'], y=avg_popularity[column], name=column)
             lines.append(line)
 
     # Create the layout with checklist dropdown
     layout = go.Layout(
-        title='Average Popularity by Normalized Value',
+        title='Average Feature Value per Year',
         title_x=0.3,  # Set the title position to the center
         title_y=0.9,  # Set the title position to the upper part
-        xaxis_title='Average Normalized Value',
-        yaxis_title='Popularity',
+        xaxis_title='Year',
+        yaxis_title='Average Normalized Value',
         legend=dict(
             title='Choose Features',
             title_font=dict(size=18),
@@ -79,7 +78,7 @@ def first_vis(data):
                     dict(
                         label='All',
                         method='update',
-                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Popularity by Normalized Value'}]
+                        args=[{'visible': [True] * len(lines)}, {'title': 'Average Feature Value per Year'}]
                     )
                 ]),
                 direction='down',  # the position of the dropdown
