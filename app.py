@@ -194,8 +194,8 @@ def map_vis(map_data):
 
 st.header('What are the trends and patterns in popular music from 2000 to 2019, based on the Top Hits Spotify dataset?')
 st.header("Are there any notable differences in the features between popular songs from different years? ")
-st.write("Explore the change in different features in Spotify's most popular songs over the years. Each line represents the average normalized value of a specific feature over the years. To focus on songs within a specific popularity range, you can use the slider to select the desired range. The graph will display the average feature values for songs falling within the selected popularity range.
-To view all the features together, simply choose the 'All' option from the dropdown menu. This allows you to compare how different features evolve over time. Additionally, you have the flexibility to temporarily remove a specific feature from the graph by clicking on its name.")
+st.write("Explore the change in different features in Spotify's most popular songs over the years. Each line represents the average normalized value of a specific feature over the years. To focus on songs within a specific popularity range, you can use the slider to select the desired range. The graph will display the average feature values for songs falling within the selected popularity range. To view all the features together, simply choose the 'All' option from the dropdown menu. This allows you to compare how different features evolve over time. Additionally, you have the flexibility to temporarily remove a specific feature from the graph by clicking on its name.
+
 first_vis(data)
 st.header('What are the characteristics that have the strongest influence on the popularity of a song? ')
 st.write("Explore the factors that shape a song's popularity. By selecting different features from the dropdown menu, you can observe how various characteristics influence a song's popularity.")
