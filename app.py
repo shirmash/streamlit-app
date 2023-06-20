@@ -33,9 +33,6 @@ def first_vis(data):
     # Create a scroll-down bar to choose the feature
     selected_feature = st.selectbox('Select Feature:', features_names)
 
-    # Group data by year and calculate the average normalized value and popularity
-    avg_popularity = data.groupby('year')[[selected_feature, 'popularity']].mean().reset_index()
-
     # Calculate the range of the selected feature
     feature_min = data[selected_feature].min()
     feature_max = data[selected_feature].max()
@@ -48,11 +45,11 @@ def first_vis(data):
     x_min, x_max = st.slider('Select X-axis Range:', feature_min, feature_max, (feature_min, feature_max))
 
     # Update the x-axis range based on the slider selection
-    fig = px.scatter(avg_popularity, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
+    fig = px.scatter(data, x=selected_feature, y='popularity', title='Average Popularity by Normalized Feature Value')
     fig.update_xaxes(range=[x_min, x_max])
 
     # Filter the data based on the selected x-axis range
-    filtered_data = avg_popularity[(avg_popularity[selected_feature] >= x_min) & (avg_popularity[selected_feature] <= x_max)]
+    filtered_data = data[(avg_popularity[selected_feature] >= x_min) & (data[selected_feature] <= x_max)]
 
     # Create a scatter plot
     fig.add_trace(go.Scatter(x=filtered_data[selected_feature], y=filtered_data['popularity'], mode='markers', name='Filtered Data'))
