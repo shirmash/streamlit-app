@@ -5,4 +5,8 @@ numpy
 sklearn
 matplotlib
 plotly
+seaborn
+scikit-learn
+ipywidgets
+
 
