@@ -7,5 +7,4 @@ matplotlib
 seaborn
 scikit-learn
 ipywidgets
-shap
 plotly
