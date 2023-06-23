@@ -2,11 +2,8 @@ altair
 pandas
 streamlit
 numpy
-sklearn
 matplotlib
 plotly
 seaborn
 scikit-learn
 ipywidgets
-
-
