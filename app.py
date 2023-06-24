@@ -139,7 +139,7 @@ def third_vis(data):
         title={
             'text': f"Popularity of the genre {select_genre} Over the Years",
             'x': 0.3, 'y': 0.85 })
-    col1, col2 = st.columns([1,13])
+    col1, col2 = st.columns([1,10])
     with col1:
         st.write("")
     with col2:
